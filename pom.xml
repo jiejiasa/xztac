@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
-    <groupId>com.ruoyi</groupId>
-    <artifactId>ruoyi</artifactId>
+    <groupId>com.xztacti</groupId>
+    <artifactId>xztacti</artifactId>
     <version>3.8.6</version>
 
     <name>ruoyi</name>
@@ -13,7 +13,7 @@
     <description>若依管理系统</description>
     
     <properties>
-        <ruoyi.version>3.8.6</ruoyi.version>
+        <xztacti.version>3.8.6</xztacti.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -138,57 +138,51 @@
 
             <!-- 定时任务-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-quartz</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.xztacti</groupId>
+                <artifactId>xztacti-quartz</artifactId>
+                <version>${xztacti.version}</version>
             </dependency>
 
             <!-- 代码生成-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-generator</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.xztacti</groupId>
+                <artifactId>xztacti-generator</artifactId>
+                <version>${xztacti.version}</version>
             </dependency>
 
             <!-- 核心模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-framework</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.xztacti</groupId>
+                <artifactId>xztacti-framework</artifactId>
+                <version>${xztacti.version}</version>
             </dependency>
 
             <!-- 系统模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-system</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.xztacti</groupId>
+                <artifactId>xztacti-system</artifactId>
+                <version>${xztacti.version}</version>
             </dependency>
 
             <!-- 通用工具-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-common</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.xztacti</groupId>
+                <artifactId>xztacti-common</artifactId>
+                <version>${xztacti.version}</version>
             </dependency>
 
 
-            <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-activiti</artifactId>
-                <version>${ruoyi.version}</version>
-            </dependency>
 
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>ruoyi-admin</module>
-        <module>ruoyi-framework</module>
-        <module>ruoyi-system</module>
-        <module>ruoyi-quartz</module>
-        <module>ruoyi-generator</module>
-        <module>ruoyi-common</module>
-        <module>ruoyi-activiti</module>
+        <module>xztacti-admin</module>
+        <module>xztacti-framework</module>
+        <module>xztacti-system</module>
+        <module>xztacti-quartz</module>
+        <module>xztacti-generator</module>
+        <module>xztacti-common</module>
     </modules>
     <packaging>pom</packaging>
 
