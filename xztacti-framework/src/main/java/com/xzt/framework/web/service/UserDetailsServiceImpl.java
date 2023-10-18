@@ -1,12 +1,5 @@
 package com.xzt.framework.web.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 import com.xzt.common.core.domain.entity.SysUser;
 import com.xzt.common.core.domain.model.LoginUser;
 import com.xzt.common.enums.UserStatus;
@@ -14,6 +7,13 @@ import com.xzt.common.exception.ServiceException;
 import com.xzt.common.utils.MessageUtils;
 import com.xzt.common.utils.StringUtils;
 import com.xzt.system.service.ISysUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 /**
  * 用户验证处理

@@ -1,12 +1,5 @@
 package com.xzt.framework.web.service;
 
-import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
 import com.xzt.common.constant.CacheConstants;
 import com.xzt.common.constant.Constants;
 import com.xzt.common.constant.UserConstants;
@@ -14,11 +7,7 @@ import com.xzt.common.core.domain.entity.SysUser;
 import com.xzt.common.core.domain.model.LoginUser;
 import com.xzt.common.core.redis.RedisCache;
 import com.xzt.common.exception.ServiceException;
-import com.xzt.common.exception.user.BlackListException;
-import com.xzt.common.exception.user.CaptchaException;
-import com.xzt.common.exception.user.CaptchaExpireException;
-import com.xzt.common.exception.user.UserNotExistsException;
-import com.xzt.common.exception.user.UserPasswordNotMatchException;
+import com.xzt.common.exception.user.*;
 import com.xzt.common.utils.DateUtils;
 import com.xzt.common.utils.MessageUtils;
 import com.xzt.common.utils.StringUtils;
@@ -28,6 +17,14 @@ import com.xzt.framework.manager.factory.AsyncFactory;
 import com.xzt.framework.security.context.AuthenticationContextHolder;
 import com.xzt.system.service.ISysConfigService;
 import com.xzt.system.service.ISysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * 登录校验方法

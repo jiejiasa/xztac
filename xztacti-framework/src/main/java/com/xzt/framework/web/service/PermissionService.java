@@ -1,13 +1,14 @@
 package com.xzt.framework.web.service;
 
-import java.util.Set;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import com.xzt.common.core.domain.entity.SysRole;
 import com.xzt.common.core.domain.model.LoginUser;
 import com.xzt.common.utils.SecurityUtils;
 import com.xzt.common.utils.StringUtils;
 import com.xzt.framework.security.context.PermissionContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Set;
 
 /**
  * RuoYi首创 自定义权限实现，ss取自SpringSecurity首字母

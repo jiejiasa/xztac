@@ -1,5 +1,9 @@
 package com.xzt.framework.config;
 
+import com.xzt.framework.config.properties.PermitAllUrlProperties;
+import com.xzt.framework.security.filter.JwtAuthenticationTokenFilter;
+import com.xzt.framework.security.handle.AuthenticationEntryPointImpl;
+import com.xzt.framework.security.handle.LogoutSuccessHandlerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -15,10 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.filter.CorsFilter;
-import com.xzt.framework.config.properties.PermitAllUrlProperties;
-import com.xzt.framework.security.filter.JwtAuthenticationTokenFilter;
-import com.xzt.framework.security.handle.AuthenticationEntryPointImpl;
-import com.xzt.framework.security.handle.LogoutSuccessHandlerImpl;
 
 /**
  * spring security配置
@@ -111,15 +111,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
-                .antMatchers("/login", "/register", "/captchaImage").permitAll()
+                .antMatchers("/login", "/register", "/getInfo","/captchaImage").permitAll()
                 // 静态资源，可匿名访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
-                //activiti相关接口放行
-                .antMatchers("/modeler/**").anonymous()
-                .antMatchers("/activiti/definition/upload").anonymous()
-                .antMatchers("/activiti/definition/readResource").anonymous()
-                .antMatchers("/activiti/process/read-resource").anonymous()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()

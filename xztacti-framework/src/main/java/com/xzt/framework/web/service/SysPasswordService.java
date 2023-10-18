@@ -1,10 +1,5 @@
 package com.xzt.framework.web.service;
 
-import java.util.concurrent.TimeUnit;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
 import com.xzt.common.constant.CacheConstants;
 import com.xzt.common.constant.Constants;
 import com.xzt.common.core.domain.entity.SysUser;
@@ -16,6 +11,12 @@ import com.xzt.common.utils.SecurityUtils;
 import com.xzt.framework.manager.AsyncManager;
 import com.xzt.framework.manager.factory.AsyncFactory;
 import com.xzt.framework.security.context.AuthenticationContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * 登录密码方法

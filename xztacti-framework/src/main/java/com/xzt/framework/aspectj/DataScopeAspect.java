@@ -1,11 +1,5 @@
 package com.xzt.framework.aspectj;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.springframework.stereotype.Component;
 import com.xzt.common.annotation.DataScope;
 import com.xzt.common.core.domain.BaseEntity;
 import com.xzt.common.core.domain.entity.SysRole;
@@ -15,6 +9,13 @@ import com.xzt.common.core.text.Convert;
 import com.xzt.common.utils.SecurityUtils;
 import com.xzt.common.utils.StringUtils;
 import com.xzt.framework.security.context.PermissionContextHolder;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 数据过滤处理

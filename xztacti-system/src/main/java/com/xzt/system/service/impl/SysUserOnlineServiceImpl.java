@@ -1,10 +1,10 @@
 package com.xzt.system.service.impl;
 
-import org.springframework.stereotype.Service;
 import com.xzt.common.core.domain.model.LoginUser;
 import com.xzt.common.utils.StringUtils;
 import com.xzt.system.domain.SysUserOnline;
 import com.xzt.system.service.ISysUserOnlineService;
+import org.springframework.stereotype.Service;
 
 /**
  * 在线用户 服务层处理
