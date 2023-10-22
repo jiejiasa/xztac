@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/xztacti.iml" filepath="$PROJECT_DIR$/.idea/xztacti.iml" />
       <module fileurl="file://$PROJECT_DIR$/xztacti-admin/xztacti-admin.iml" filepath="$PROJECT_DIR$/xztacti-admin/xztacti-admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xztacti-business/xztacti-business.iml" filepath="$PROJECT_DIR$/xztacti-business/xztacti-business.iml" />
       <module fileurl="file://$PROJECT_DIR$/xztacti-common/xztacti-common.iml" filepath="$PROJECT_DIR$/xztacti-common/xztacti-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/xztacti-framework/xztacti-framework.iml" filepath="$PROJECT_DIR$/xztacti-framework/xztacti-framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/xztacti-generator/xztacti-generator.iml" filepath="$PROJECT_DIR$/xztacti-generator/xztacti-generator.iml" />

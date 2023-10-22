@@ -173,6 +173,13 @@
             </dependency>
 
 
+            <dependency>
+                <groupId>com.xztacti</groupId>
+                <artifactId>xztacti-business</artifactId>
+                <version>${xztacti.version}</version>
+            </dependency>
+
+
 
 
         </dependencies>
@@ -185,6 +192,7 @@
         <module>xztacti-quartz</module>
         <module>xztacti-generator</module>
         <module>xztacti-common</module>
+        <module>xztacti-business</module>
     </modules>
     <packaging>pom</packaging>
 

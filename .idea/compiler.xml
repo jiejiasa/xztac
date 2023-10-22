@@ -7,10 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="xztacti-business" />
         <module name="xztacti-quartz" />
-        <module name="xztacti-generator" />
         <module name="xztacti-system" />
         <module name="xztacti-common" />
+        <module name="xztacti-generator" />
         <module name="xztacti-framework" />
         <module name="xztacti-admin" />
       </profile>
@@ -20,6 +21,7 @@
       <module name="ruoyi-activiti" target="1.8" />
       <module name="xztacti" target="1.8" />
       <module name="xztacti-admin" target="1.8" />
+      <module name="xztacti-business" target="1.8" />
       <module name="xztacti-common" target="1.8" />
       <module name="xztacti-framework" target="1.8" />
       <module name="xztacti-generator" target="1.8" />
