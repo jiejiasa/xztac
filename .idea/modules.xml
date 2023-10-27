@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/xztacti.iml" filepath="$PROJECT_DIR$/.idea/xztacti.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xztacti-activiti.iml" filepath="$PROJECT_DIR$/xztacti-activiti.iml" />
       <module fileurl="file://$PROJECT_DIR$/xztacti-admin/xztacti-admin.iml" filepath="$PROJECT_DIR$/xztacti-admin/xztacti-admin.iml" />
       <module fileurl="file://$PROJECT_DIR$/xztacti-business/xztacti-business.iml" filepath="$PROJECT_DIR$/xztacti-business/xztacti-business.iml" />
       <module fileurl="file://$PROJECT_DIR$/xztacti-common/xztacti-common.iml" filepath="$PROJECT_DIR$/xztacti-common/xztacti-common.iml" />

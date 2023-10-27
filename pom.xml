@@ -10,7 +10,7 @@
 
     <name>xztacti</name>
 <!--    <url>http://www.ruoyi.vip</url>-->
-    <description>星者痛</description>
+    <description>行者通</description>
     
     <properties>
         <xztacti.version>3.8.6</xztacti.version>
@@ -173,9 +173,16 @@
             </dependency>
 
 
+            <!--业务模块-->
             <dependency>
                 <groupId>com.xztacti</groupId>
                 <artifactId>xztacti-business</artifactId>
+                <version>${xztacti.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.xzt</groupId>
+                <artifactId>xztacti-activiti</artifactId>
                 <version>${xztacti.version}</version>
             </dependency>
 
@@ -193,6 +200,7 @@
         <module>xztacti-generator</module>
         <module>xztacti-common</module>
         <module>xztacti-business</module>
+        <module>xztacti-activiti</module>
     </modules>
     <packaging>pom</packaging>
 

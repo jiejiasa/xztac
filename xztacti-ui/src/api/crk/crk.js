@@ -1,14 +1,5 @@
 import request from '@/utils/request'
-
-
-
-// // 查询部门详细
-// export function getDept(deptId) {
-//   return request({
-//     url: '/system/dept/' + deptId,
-//     method: 'get'
-//   })
-// }
+import * as url from 'url'
 
 // 查询库存
 export function getList(data) {
@@ -19,7 +10,6 @@ export function getList(data) {
   })
 }
 
-
 export function getInList(data) {
   return request({
     url: '/inventory/getInList',
@@ -28,19 +18,36 @@ export function getInList(data) {
   })
 }
 
-// 原有基础入库
-export function addOrg(data) {
+
+export function getOUtList(data) {
   return request({
-    url: '/inventory/addOrg',
+     url: '/inventory/getOutList',
+    method: 'post',
+    data: data
+    }
+
+  )
+}
+
+// 原有基础入库
+export function save(data) {
+  return request({
+    url: '/inventory/save',
     method: 'post',
     data: data
   })
 }
-//
-// // 删除部门
-// export function delDept(deptId) {
-//   return request({
-//     url: '/system/dept/' + deptId,
-//     method: 'delete'
-//   })
-// }
+
+export function getInventoryInfo(id) {
+  return request({
+    url: '/inventory/getInventoryInfo' +'?id=' + id,
+    method: 'get',
+  })
+}
+// 删除库存信息
+export function delInventory(id) {
+  return request({
+    url: '/inventory/delInventory' + '?id='+ id,
+    method: 'get',
+  })
+}

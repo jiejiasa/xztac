@@ -1,25 +1,12 @@
  q<template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" >
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:dept:add']"
-        >新增</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
 
     <el-table
       :data="crkList"
@@ -43,32 +30,6 @@
         prop="time"
         label="时间">
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:dept:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-plus"
-            @click="handleAdd(scope.row)"
-            v-hasPermi="['system:dept:add']"
-          >新增</el-button>
-          <el-button
-            v-if="scope.row.parentId != 0"
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:dept:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
     </el-table>
     <pagination
       v-show="total>0"
@@ -84,7 +45,6 @@
 
 <script>
 import { getInList} from "@/api/crk/crk";
-import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
@@ -93,12 +53,8 @@ export default {
     return {
       // 遮罩层
       loading: true,
-      // 显示搜索条件
-      showSearch: true,
       // 表格树数据
       crkList: [],
-      // 部门树选项
-      deptOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层

@@ -61,6 +61,18 @@
             <artifactId>xztacti-generator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.xztacti</groupId>
+            <artifactId>xztacti-business</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.xzt</groupId>
+            <artifactId>xztacti-activiti</artifactId>
+            <version>3.8.6</version>
+        </dependency>
+
 
 
 

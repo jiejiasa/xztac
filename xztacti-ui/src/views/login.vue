@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">若依后台管理系统</h3>
+      <h3 class="title">苏州工业园区行者通咨询服务有限公司库存管理系统</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"

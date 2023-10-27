@@ -16,7 +16,6 @@ public class XztActiApplication
 {
     public static void main(String[] args)
     {
-        // System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(XztActiApplication.class, args);
         System.out.println("(♥◠‿◠)ﾉﾞ  苏州行者通车辆库存系统启动成功   ლ(´ڡ`ლ)");
     }
