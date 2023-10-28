@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!--    &lt;!&ndash; 数据源配置 &ndash;&gt;-->
+<!--    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">-->
+<!--        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>-->
+<!--        <property name="url" value="jdbc:mysql://localhost:3306/xzt"/>-->
+<!--        <property name="username" value="root"/>-->
+<!--        <property name="password" value="123456"/>-->
+<!--    </bean>-->
+
+<!--    &lt;!&ndash; 事务管理器配置 &ndash;&gt;-->
+<!--    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">-->
+<!--        <property name="sessionFactory" ref="sessionFactory"/>-->
+<!--    </bean>-->
+
+<!--    &lt;!&ndash; 会话工厂配置 &ndash;&gt;-->
+<!--    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+<!--        <property name="dataSource" ref="dataSource"/>-->
+<!--        <property name="configLocation" value="classpath:mybatis-config.xml"/>-->
+<!--        <property name="mapperLocations" value="classpath:mapper/*.xml"/>-->
+<!--    </bean>-->
+
+<!--    &lt;!&ndash; Mapper扫描配置 &ndash;&gt;-->
+<!--    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+<!--        <property name="basePackage" value="com.example.mapper"/>-->
+<!--        <property name="sqlSessionFactoryBeanName" value="sessionFactory"/>-->
+<!--    </bean>-->
+
+<!--    &lt;!&ndash; 任务服务配置 &ndash;&gt;-->
+<!--    <bean id="taskService" class="org.activiti.engine.impl.persistence.entity.TaskEntityManager">-->
+<!--        <property name="processEngineConfiguration" ref="processEngineConfiguration"/>-->
+<!--    </bean>-->
+
+    <!-- 流程引擎配置 -->
+    <bean id="processEngineConfiguration" class="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration">
+        <property name="jdbcDriver" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/xzt?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;useSSL=true&amp;serverTimezone=GMT%2B8&amp;nullCatalogMeansCurrent=true"/>
+        <property name="jdbcUsername" value="root"/>
+        <property name="jdbcPassword" value="123456"/>
+        <property name="databaseSchemaUpdate" value="true"/>
+    </bean>
+
+<!--    &lt;!&ndash; 流程启动器配置 &ndash;&gt;-->
+<!--    <bean id="processEngine" class="org.activiti.engine.ProcessEngines">-->
+<!--        <factory-method name="getDefaultProcessEngine">-->
+<!--            <constructor-arg index="0" value="processEngineConfiguration"/>-->
+<!--        </factory-method>-->
+<!--    </bean>-->
+
+</beans>

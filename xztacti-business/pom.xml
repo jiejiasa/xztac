@@ -9,9 +9,7 @@
 	</parent>
 	<artifactId>xztacti-business</artifactId>
 	<description>xztacti-business</description>
-	<properties>
-		<java.version>17</java.version>
-	</properties>
+
 	<dependencies>
 
 		<!-- 通用工具-->
@@ -34,6 +32,11 @@
 			<artifactId>mybatis-plus-extension</artifactId>
 			<version>3.5.3.1</version>
 			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.xzt</groupId>
+			<artifactId>xztacti-activiti</artifactId>
 		</dependency>
 
 	</dependencies>
