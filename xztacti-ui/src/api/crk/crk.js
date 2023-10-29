@@ -47,7 +47,14 @@ export function getInventoryInfo(id) {
 // 删除库存信息
 export function delInventory(id) {
   return request({
-    url: '/inventory/delInventory' + '?id='+ id,
+    url: '/inventory/delInventory' + '?id=' + id,
     method: 'get',
   })
 }
+export function getGoOut(id) {
+    return request({
+      url: '/inventory/getGoOut' + '?id=' + id,
+      method: 'get',
+    })
+}
+

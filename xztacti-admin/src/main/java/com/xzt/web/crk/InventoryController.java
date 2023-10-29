@@ -8,6 +8,7 @@ import com.xzt.common.utils.bean.BeanUtils;
 import com.xzt.inventory.domain.InInventory;
 import com.xzt.inventory.domain.InventoryManagement;
 import com.xzt.inventory.domain.OutInventory;
+import com.xzt.inventory.rvo.GoOutInventoryRVO;
 import com.xzt.inventory.service.InInventoryService;
 import com.xzt.inventory.service.InventoryManagementService;
 import com.xzt.inventory.service.OutInventoryService;
@@ -83,6 +84,19 @@ public class InventoryController {
         inInventory.setPeopleId(SecurityUtils.getUserId());
         inInventoryService.save(inInventory);
         return inventoryManagementService.save(inventoryManagement);
+    }
+
+
+    @GetMapping("/getGoOut")
+    public GoOutInventoryRVO getGoOut(@RequestParam("id") Integer id){
+
+
+
+        GoOutInventoryRVO goOutInventoryRVO = inventoryManagementService.getGoOut(id);
+
+        return goOutInventoryRVO;
+
+
     }
 
 

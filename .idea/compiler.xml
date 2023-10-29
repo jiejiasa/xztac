@@ -19,16 +19,5 @@
         <module name="xztacti-activiti" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="xztacti" target="1.8" />
-      <module name="xztacti-activiti" target="1.8" />
-      <module name="xztacti-admin" target="1.8" />
-      <module name="xztacti-business" target="1.8" />
-      <module name="xztacti-common" target="1.8" />
-      <module name="xztacti-framework" target="1.8" />
-      <module name="xztacti-generator" target="1.8" />
-      <module name="xztacti-quartz" target="1.8" />
-      <module name="xztacti-system" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

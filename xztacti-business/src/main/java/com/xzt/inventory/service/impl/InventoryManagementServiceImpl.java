@@ -5,19 +5,16 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xzt.common.core.domain.AjaxResult;
-import com.xzt.common.utils.SecurityUtils;
-import com.xzt.inventory.domain.InInventory;
+import com.xzt.common.core.domain.entity.SysUser;
 import com.xzt.inventory.domain.InventoryManagement;
 import com.xzt.inventory.mapper.InventoryManagementMapper;
-import com.xzt.inventory.service.InInventoryService;
+import com.xzt.inventory.rvo.GoOutInventoryRVO;
 import com.xzt.inventory.service.InventoryManagementService;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
-import com.xzt.inventory.vo.InventoryManagementUpdateVO;
+import com.xzt.system.service.ISysUserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,9 +23,9 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
     @Resource
     private InventoryManagementMapper inventoryManagementMapper;
 
-    @Resource
-    private InInventoryService inInventoryService;
 
+    @Resource
+    private ISysUserService sysUserService;
 
     /**
      * 库存信息列表
@@ -43,25 +40,7 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
         return inventoryManagementPageInfo;
     }
 
-    @Override
-    public Boolean addOrg(InventoryManagementUpdateVO vo) {
 
-        InventoryManagement inventoryManagement = inventoryManagementMapper.selectById(vo.getId());
-        inventoryManagement.setCarNum(inventoryManagement.getCarNum()+vo.getInNum());
-        InInventory inInventory = new InInventory();
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String format = formatter.format(new Date());
-        inInventory.setTime( format);
-        inInventory.setCarNum(vo.getInNum());
-        inInventory.setCarInformation(inventoryManagement.getCarInformation());
-        inInventory.setPeopleId(SecurityUtils.getUserId());
-        inInventory.setInventoryCode(inventoryManagement.getInventoryCode());
-        inInventoryService.save(inInventory);
-        inventoryManagementMapper.updateById(inventoryManagement);
-        return true;
-
-    }
 
     /**
      * 查询库存详细信息
@@ -79,6 +58,22 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
     public AjaxResult delInventory(Integer id) {
 
         return AjaxResult.success(inventoryManagementMapper.deleteById(id));
+    }
+
+    @Override
+    public GoOutInventoryRVO getGoOut(Integer id) {
+
+        GoOutInventoryRVO goOutInventoryRVO = new GoOutInventoryRVO();
+        InventoryManagement byId = this.getById(id);
+        goOutInventoryRVO.setInventoryManagement(byId);
+
+        List<SysUser> userListone = sysUserService.selectByRoleKey("first");
+        List<SysUser> userListtwo = sysUserService.selectByRoleKey("two");
+
+        goOutInventoryRVO.setFirstPeople(userListone);
+        goOutInventoryRVO.setTwoPeople(userListtwo);
+
+        return goOutInventoryRVO;
     }
 
 

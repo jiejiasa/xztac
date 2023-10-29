@@ -9,7 +9,6 @@
 	</parent>
 	<artifactId>xztacti-business</artifactId>
 	<description>xztacti-business</description>
-
 	<dependencies>
 
 		<!-- 通用工具-->

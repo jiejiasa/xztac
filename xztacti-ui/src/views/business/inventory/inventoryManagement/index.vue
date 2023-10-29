@@ -59,7 +59,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="getGoOut(scope.row)"
           >出库</el-button>
           <el-button
             size="mini"
@@ -110,18 +110,57 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+
+
+<!--    出庫申請頁面-->
+    <el-dialog :title="title" :visible.sync="outing" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="仓库编号" prop="inventoryCode">
+              <el-input v-model="form.inventoryCode" placeholder="仓库编号" maxlength="20" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="车辆信息" prop="carInformation">
+              <el-input v-model="form.carInformation" placeholder="车辆信息" maxlength="11" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="数量" prop="carNum">
+              <el-input v-model="form.carNum" type="number"  placeholder="数量" maxlength="20"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="審核人" prop="nickName">
+              <el-input v-model="firstpeople.nickName"  placeholder="第一審核人" maxlength="20"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancelout">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getList,getInventoryInfo,save,delInventory} from "@/api/crk/crk";
-import Treeselect from "@riophae/vue-treeselect";
+import { getList,getInventoryInfo,save,delInventory,getGoOut} from "@/api/crk/crk";
+
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "inventoryManagement",
-  dicts: ['sys_normal_disable'],
-  components: { Treeselect },
   data() {
     return {
       // 遮罩层
@@ -143,7 +182,9 @@ export default {
       },
       // 表单参数
       form: {},
+      firstpeople : {},
       total:0,
+      outing:false,
     };
   },
   created() {
@@ -160,9 +201,24 @@ export default {
       });
     },
 
+
+    getGoOut(row) {
+      this.outing = true;
+      getGoOut(row.id).then(response => {
+        this.form = response.inventoryManagement;
+        this.firstpeople = response.firstPeople[0];
+      });
+    },
+
     // 取消按钮
     cancel() {
       this.open = false;
+      this.reset();
+    },
+
+    // 取消按钮
+    cancelout() {
+      this.outing = false;
       this.reset();
     },
     // 表单重置
@@ -191,18 +247,9 @@ export default {
       this.open = true;
       this.title = "新增库存";
 
-      // listDept().then(response => {
-      //   this.deptOptions = this.handleTree(response.data, "deptId");
-      // });
+
     },
-    /** 展开/折叠操作 */
-    toggleExpandAll() {
-      this.refreshTable = false;
-      this.isExpandAll = !this.isExpandAll;
-      this.$nextTick(() => {
-        this.refreshTable = true;
-      });
-    },
+
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();

@@ -28,4 +28,18 @@ public class InventoryManagement {
     private String time;
 
     private Integer delFlag;
+
+
+    private String customerName;
+
+    private String region;
+
+
+    private String businessType;
+
+    private String License_plateNumber;
+
+    private Integer status;
+
+
 }

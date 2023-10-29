@@ -5,16 +5,22 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xzt.DeployActiviti;
 import com.xzt.inventory.domain.InInventory;
 import com.xzt.inventory.mapper.InInventoryManagementMapper;
 import com.xzt.inventory.service.InInventoryService;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
 public class InInventoryServiceImpl extends ServiceImpl<InInventoryManagementMapper, InInventory> implements InInventoryService {
+
+
+    @Resource
+    private DeployActiviti deployActiviti;
 
 
     /**
