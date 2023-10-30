@@ -58,3 +58,12 @@ export function getGoOut(id) {
     })
 }
 
+
+export function goOut(data) {
+  return request({
+    url: '/inventory/goOut',
+    method: 'post',
+    data: data
+  })
+}
+

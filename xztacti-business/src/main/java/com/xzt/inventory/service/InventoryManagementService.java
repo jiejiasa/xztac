@@ -6,15 +6,22 @@ import com.github.pagehelper.PageInfo;
 import com.xzt.common.core.domain.AjaxResult;
 import com.xzt.inventory.domain.InventoryManagement;
 import com.xzt.inventory.rvo.GoOutInventoryRVO;
+import com.xzt.inventory.vo.GoOutInfo;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
+import com.xzt.vo.HandleAuditParam;
 
 public interface InventoryManagementService extends IService<InventoryManagement> {
-    PageInfo<InventoryManagement> selectList(InventoryManagementSelectVO vo);
+        PageInfo<InventoryManagement> selectList(InventoryManagementSelectVO vo);
 
 
-    AjaxResult getInventoryInfo(Integer id);
+        AjaxResult getInventoryInfo(Integer id);
 
-    AjaxResult delInventory(Integer id);
+        AjaxResult delInventory(Integer id);
 
-    GoOutInventoryRVO getGoOut(Integer id);
+        GoOutInventoryRVO getGoOut(Integer id);
+
+        Boolean goOut(GoOutInfo goOutInfo);
+
+
+         Boolean auditFlow(HandleAuditParam param);
 }

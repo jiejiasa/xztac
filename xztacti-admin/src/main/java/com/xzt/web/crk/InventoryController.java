@@ -12,6 +12,7 @@ import com.xzt.inventory.rvo.GoOutInventoryRVO;
 import com.xzt.inventory.service.InInventoryService;
 import com.xzt.inventory.service.InventoryManagementService;
 import com.xzt.inventory.service.OutInventoryService;
+import com.xzt.inventory.vo.GoOutInfo;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
 import org.springframework.web.bind.annotation.*;
 
@@ -106,6 +107,10 @@ public class InventoryController {
     }
 
 
+    @PostMapping("/goOut")
+    public Boolean goOut (@RequestBody GoOutInfo goOutInfo){
+        return inventoryManagementService.goOut(goOutInfo);
+    }
 
 
 }

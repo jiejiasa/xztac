@@ -13,9 +13,9 @@
         <module name="xztacti-common" />
         <module name="xztacti-business (2)" />
         <module name="xztacti-generator" />
-        <module name="xztacti-framework" />
-        <module name="xztacti-admin" />
         <module name="xztacti-business (1)" />
+        <module name="xztacti-admin" />
+        <module name="xztacti-framework" />
         <module name="xztacti-activiti" />
       </profile>
     </annotationProcessing>

@@ -17,4 +17,10 @@ public class OutInventory {
     private Integer carNum;
 
     private String time;
+
+
+
+    private Integer inManId;
+
+    private Integer settleStatus;
 }

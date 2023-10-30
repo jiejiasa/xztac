@@ -10,11 +10,15 @@ import com.xzt.inventory.domain.InventoryManagement;
 import com.xzt.inventory.mapper.InventoryManagementMapper;
 import com.xzt.inventory.rvo.GoOutInventoryRVO;
 import com.xzt.inventory.service.InventoryManagementService;
+import com.xzt.inventory.vo.GoOutInfo;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
+import com.xzt.service.IProcessService;
 import com.xzt.system.service.ISysUserService;
+import com.xzt.vo.HandleAuditParam;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -26,6 +30,9 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
 
     @Resource
     private ISysUserService sysUserService;
+
+    @Resource
+    private IProcessService processService;
 
     /**
      * 库存信息列表
@@ -74,6 +81,28 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
         goOutInventoryRVO.setTwoPeople(userListtwo);
 
         return goOutInventoryRVO;
+    }
+
+    @Override
+    public Boolean goOut(GoOutInfo goOutInfo) {
+
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("assignee0",goOutInfo.getFirstPeopleId());
+        map.put("assignee1","101");
+
+        String outInventory = processService.startProcessInstance("outInventory", goOutInfo.getId(), map);
+
+
+
+        return true;
+    }
+
+
+
+    public Boolean auditFlow(HandleAuditParam param){
+        Boolean aBoolean = processService.handleAudit(param);
+        return aBoolean;
     }
 
 

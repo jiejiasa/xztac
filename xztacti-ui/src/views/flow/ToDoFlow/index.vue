@@ -7,24 +7,11 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-        >入库</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
 
     <el-table
-      :data="crkList"
+      :data="list"
       border
       style="width: 100%">
-      <el-table-column type="selection" width="55" align="center" />
       <el-table-column
         prop="inventoryCode"
         label="仓库编号"
@@ -43,77 +30,28 @@
         prop="time"
         label="时间">
       </el-table-column>
-      <el-table-column
-        prop="time"
-        label="状态">
-      </el-table-column>
+
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-          >编辑</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
             @click="getGoOut(scope.row)"
           >出库</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-          >删除</el-button>
         </template>
       </el-table-column>
-
     </el-table>
     <pagination
       v-show="total>0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
-      @pagination="getList"
+      @pagination="getInList"
     />
 
-    <!-- 添加或修改库存管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
 
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="仓库编号" prop="inventoryCode">
-              <el-input v-model="form.inventoryCode" placeholder="仓库编号" maxlength="20" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="车辆信息" prop="carInformation">
-              <el-input v-model="form.carInformation" placeholder="车辆信息" maxlength="11" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="数量" prop="carNum">
-              <el-input v-model="form.carNum" type="number"  placeholder="数量" maxlength="20"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
-
-
-
-<!--    出庫申請頁面-->
     <el-dialog :title="auditInfo.title" :visible.sync="auditInfo.outing" width="600px" append-to-body>
       <el-form ref="auditForm" :model="auditInfo.form" :rules="auditInfo.rules" label-width="80px">
 
@@ -158,32 +96,42 @@
           </el-col>
         </el-row>
 
+        <el-form-item label="审批意见" prop="passed">
+          <el-select v-model="auditInfo.form.passed" placeholder="请选择审批意见">
+            <el-option label="同意" :value="true"/>
+            <el-option label="拒绝" :value="false"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="批注" prop="info">
+          <el-input type="textarea" v-model="auditInfo.form.info" placeholder="请输入批注"/>
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitOut">确 定</el-button>
+        <el-button type="primary" @click="handle">确 定</el-button>
         <el-button @click="cancelout">取 消</el-button>
       </div>
     </el-dialog>
+
   </div>
 </template>
 
 <script>
-import { getList,getInventoryInfo,save,delInventory,getGoOut,goOut} from "@/api/crk/crk";
-
+import { getToDoList,handle} from "@/api/flow/flow";
+import { getGoOut, goOut } from '@/api/crk/crk'
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
-  name: "inventoryManagement",
+  name: "Dept",
   data() {
     return {
       // 遮罩层
       loading: true,
       // 表格树数据
-      crkList: [],
+      list: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
-      open: false,
       // 是否展开，默认全部展开
       isExpandAll: true,
       // 重新渲染表格状态
@@ -195,10 +143,7 @@ export default {
       },
       // 表单参数
       form: {},
-      firstpeople : {},
       total:0,
-
-      rules: {},
 
 
       auditInfo: {
@@ -218,18 +163,50 @@ export default {
     };
   },
   created() {
-    this.getList();
+    this.getInList();
   },
   methods: {
-    /** 查询库存列表 */
-    getList() {
+
+    getInList() {
       this.loading = true;
-      getList(this.queryParams).then(response => {
-        this.crkList = response.list;
+      getToDoList().then(response => {
+        this.list = response.list;
         this.total = response.total;
         this.loading = false;
       });
     },
+
+    // 取消按钮
+    cancel() {
+      this.auditInfo.outing = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        deptId: undefined,
+        parentId: undefined,
+        deptName: undefined,
+        orderNum: undefined,
+        leader: undefined,
+        phone: undefined,
+        email: undefined,
+        status: "0"
+      };
+      this.resetForm("form");
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.getInList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+
+
+
 
 
     getGoOut(row) {
@@ -240,105 +217,23 @@ export default {
       });
     },
 
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
 
-    // 取消按钮
-    cancelout() {
-      this.outing = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        id:undefined,
-        inventoryCode: undefined,
-        carInformation: undefined,
-        carNum: undefined,
-
-
-
-
-
-      };
-      this.resetForm("form");
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "新增库存";
-
-
-    },
-
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      getInventoryInfo(row.id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改库存信息";
-      });
-    },
-    /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != undefined) {
-            updateDept(this.form).then(response => {
-              this.$modal.msgSuccess("修改库存信息成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            save(this.form).then(response => {
-              this.$modal.msgSuccess("新增库存成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
-
-
-    submitOut :function() {
-
+    handle : function() {
       let {form} = this.auditInfo;
 
       let param  = {
-        id : form.inventoryManagement.id,
-        firstPeopleId: form.firstPeopleId,
-        settleStatus: form.settleStatus,
-
+        auditId : form.inventoryManagement.id,
+        passed: form.passed,
+        info: form.info,
       }
 
-      goOut(param);
+      handle(param);
       this.auditInfo.outing = false;
       this.getList();
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      this.$modal.confirm('是否确认删除id为"' + row.id + '"的数据项？').then(function() {
-        return delInventory(row.id);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
     }
+
+
+
   }
 };
 </script>
