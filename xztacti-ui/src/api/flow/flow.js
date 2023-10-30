@@ -14,6 +14,7 @@ export function handle(date) {
   return request({
     url: '/inventoryFlow/handle',
     method: 'post',
-    date: date,
+    data: date,
   })
 }
+

@@ -109,7 +109,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handle">确 定</el-button>
-        <el-button @click="cancelout">取 消</el-button>
+        <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -154,6 +154,8 @@ export default {
           firstPeople:[],
           firstPeopleId:undefined,
           settleStatus:undefined,
+          info:undefined,
+          passed:undefined,
 
         },
         rules: {
@@ -184,14 +186,6 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        deptId: undefined,
-        parentId: undefined,
-        deptName: undefined,
-        orderNum: undefined,
-        leader: undefined,
-        phone: undefined,
-        email: undefined,
-        status: "0"
       };
       this.resetForm("form");
     },

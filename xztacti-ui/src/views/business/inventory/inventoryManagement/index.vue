@@ -25,6 +25,11 @@
       border
       style="width: 100%">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="序号" width="50">
+        <template slot-scope="scope">
+          {{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="inventoryCode"
         label="仓库编号"
@@ -115,34 +120,34 @@
 
 <!--    出庫申請頁面-->
     <el-dialog :title="auditInfo.title" :visible.sync="auditInfo.outing" width="600px" append-to-body>
-      <el-form ref="auditForm" :model="auditInfo.form" :rules="auditInfo.rules" label-width="80px">
+      <el-form ref="auditForm" :model="auditForm" :rules="auditInfo.rules" label-width="80px">
 
 
         <el-row>
           <el-col :span="12">
             <el-form-item label="仓库编号" prop="inventoryCode">
-              <el-input v-model="auditInfo.form.inventoryManagement.inventoryCode" placeholder="仓库编号" maxlength="20" />
+              <el-input v-model="auditForm.inventoryManagement.inventoryCode" placeholder="仓库编号" maxlength="20" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="车辆信息" prop="carInformation">
-              <el-input v-model="auditInfo.form.inventoryManagement.carInformation" placeholder="车辆信息" maxlength="11" />
+              <el-input v-model="auditForm.inventoryManagement.carInformation" placeholder="车辆信息" maxlength="11" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="数量" prop="carNum">
-              <el-input v-model="auditInfo.form.inventoryManagement.carNum" type="number"  placeholder="数量" maxlength="20"/>
+              <el-input v-model="auditForm.inventoryManagement.carNum" type="number"  placeholder="数量" maxlength="20"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="審核人" prop="firstPeople">
-              <el-select  v-model="auditInfo.form.firstPeopleId" filterable placeholder="第一審核人">
+              <el-select  v-model="auditForm.firstPeopleId" filterable placeholder="第一審核人">
                 <el-option
-                  v-for="item in auditInfo.form.firstPeople"
+                  v-for="item in auditForm.firstPeople"
                   :key="item.userId"
                   :label="item.nickName"
                   :value="item.userId">
@@ -153,7 +158,7 @@
 
           <el-col :span="12">
             <el-form-item label="是否结清" prop="settleStatus">
-              <el-input v-model="auditInfo.form.settleStatus" type="number"  placeholder="是否结清" maxlength="20"/>
+              <el-input v-model="auditForm.settleStatus" type="number"  placeholder="是否结清" maxlength="20"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -195,22 +200,21 @@ export default {
       },
       // 表单参数
       form: {},
-      firstpeople : {},
       total:0,
 
       rules: {},
 
+      auditForm: {
+        inventoryManagement:{},
+        firstPeople:[],
+        firstPeopleId:undefined,
+        settleStatus:undefined,
 
+      },
       auditInfo: {
         title: '发起审核',
         outing:false,
-        form: {
-          inventoryManagement:{},
-          firstPeople:[],
-          firstPeopleId:undefined,
-          settleStatus:undefined,
 
-        },
         rules: {
 
         }
@@ -235,8 +239,8 @@ export default {
     getGoOut(row) {
       this.auditInfo.outing = true;
       getGoOut(row.id).then(response => {
-        this.auditInfo.form.inventoryManagement = response.inventoryManagement;
-        this.auditInfo.form.firstPeople = response.firstPeople;
+        this.auditForm.inventoryManagement = response.inventoryManagement;
+        this.auditForm.firstPeople = response.firstPeople;
       });
     },
 
@@ -248,23 +252,19 @@ export default {
 
     // 取消按钮
     cancelout() {
-      this.outing = false;
+      this.auditInfo.outing = false;
       this.reset();
     },
     // 表单重置
     reset() {
-      this.form = {
-        id:undefined,
-        inventoryCode: undefined,
-        carInformation: undefined,
-        carNum: undefined,
-
-
-
-
-
-      };
+      // this.form = {
+      //   id:undefined,
+      //   inventoryCode: undefined,
+      //   carInformation: undefined,
+      //   carNum: undefined,
+      // };
       this.resetForm("form");
+      this.resetForm("auditForm")
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -323,7 +323,6 @@ export default {
         id : form.inventoryManagement.id,
         firstPeopleId: form.firstPeopleId,
         settleStatus: form.settleStatus,
-
       }
 
       goOut(param);

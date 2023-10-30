@@ -36,7 +36,7 @@ public class InventoryToDoController {
     }
 
     @PostMapping("/handle")
-    public Boolean handleAudit(@RequestBody HandleAuditParam param) {
+    public Boolean handleAudit( @RequestBody  HandleAuditParam param) {
 
         inventoryManagementService.auditFlow(param);
 
