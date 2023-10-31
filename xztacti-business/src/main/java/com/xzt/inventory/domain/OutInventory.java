@@ -9,18 +9,19 @@ import lombok.Data;
 public class OutInventory {
 
     private Integer id;
-
-    private Long peopleId;
-
-    private String carInformation;
-
-    private Integer carNum;
-
-    private String time;
-
-
-
     private Integer inManId;
 
-    private Integer settleStatus;
+    private String outboundReason;
+
+    private Integer parkingFees;
+
+    private String paid;
+
+    private String vehicleRecipient;
+
+
+
+    private Integer creatorId;
+    private String createTime;
+    private Integer delFlag;
 }

@@ -5,8 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.xzt.common.core.domain.AjaxResult;
 import com.xzt.inventory.domain.InInventory;
 import com.xzt.inventory.domain.InventoryManagement;
-import com.xzt.inventory.domain.OutInventory;
 import com.xzt.inventory.rvo.GoOutInventoryRVO;
+import com.xzt.inventory.rvo.OutInventoryRVO;
 import com.xzt.inventory.service.InInventoryService;
 import com.xzt.inventory.service.InventoryManagementService;
 import com.xzt.inventory.service.OutInventoryService;
@@ -53,7 +53,7 @@ public class InventoryController {
     }
 
     @PostMapping("/getOutList")
-    public PageInfo<OutInventory> getOutList(@RequestBody InventoryManagementSelectVO vo){
+    public PageInfo<OutInventoryRVO> getOutList(@RequestBody InventoryManagementSelectVO vo){
         return outInventoryService.selectList(vo);
     }
 

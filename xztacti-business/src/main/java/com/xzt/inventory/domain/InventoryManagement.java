@@ -56,4 +56,8 @@ public class InventoryManagement {
     @TableField(exist = false)
     private String inDayMony;
 
+
+    @TableField(exist = false)
+    private String nickName;
+
 }

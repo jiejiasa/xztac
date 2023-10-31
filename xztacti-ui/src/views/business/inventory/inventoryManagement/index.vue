@@ -93,7 +93,7 @@
 
 
       <el-table-column
-        prop="creatorId"
+        prop="nickName"
         label="入库人名称"
         width="auto">
       </el-table-column>
@@ -329,10 +329,22 @@
         </el-form-item>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="審核人:" prop="firstPeople">
-              <el-select  v-model="auditForm.firstPeopleId" filterable placeholder="第一審核人">
+            <el-form-item label="第一審核人:" prop="firstPeople">
+              <el-select  v-model="auditForm.firstPeopleId" filterable placeholder="第一審核人" style="width:100%">
                 <el-option
                   v-for="item in auditForm.firstPeople"
+                  :key="item.userId"
+                  :label="item.nickName"
+                  :value="item.userId">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="第二審核人:" prop="twoPeople">
+              <el-select  v-model="auditForm.twoPeopleId" filterable placeholder="第二審核人" style="width:100%">
+                <el-option
+                  v-for="item in auditForm.twoPeople"
                   :key="item.userId"
                   :label="item.nickName"
                   :value="item.userId">
@@ -436,13 +448,14 @@ export default {
       auditForm: {
         inventoryManagement:{},
         firstPeople:[],
+        twoPeople:[],
         firstPeopleId:undefined,
         settleStatus:undefined,
         outboundReason:undefined,
         parkingFees:undefined,
         paid:undefined,
         vehicleRecipient:undefined,
-
+        twoPeopleId:undefined,
       },
       auditInfo: {
         title: '发起审核',
@@ -497,6 +510,7 @@ export default {
       getGoOut(row.id).then(response => {
         this.auditForm.inventoryManagement = response.inventoryManagement;
         this.auditForm.firstPeople = response.firstPeople;
+        this.auditForm.twoPeople = response.twoPeople;
       });
     },
 
@@ -514,12 +528,6 @@ export default {
     },
     // 表单重置
     reset() {
-      // this.form = {
-      //   id:undefined,
-      //   inventoryCode: undefined,
-      //   carInformation: undefined,
-      //   carNum: undefined,
-      // };
       this.resetForm("form");
       this.resetForm("auditForm")
     },

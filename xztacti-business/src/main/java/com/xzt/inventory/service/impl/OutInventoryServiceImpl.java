@@ -7,6 +7,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xzt.inventory.domain.OutInventory;
 import com.xzt.inventory.mapper.OutInventoryMapper;
+import com.xzt.inventory.rvo.OutInventoryRVO;
 import com.xzt.inventory.service.OutInventoryService;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
 import org.springframework.stereotype.Service;
@@ -28,11 +29,13 @@ public class OutInventoryServiceImpl extends ServiceImpl<OutInventoryMapper, Out
      * @return
      */
     @Override
-    public PageInfo<OutInventory> selectList(InventoryManagementSelectVO vo) {
+    public PageInfo<OutInventoryRVO> selectList(InventoryManagementSelectVO vo) {
+
+
+        QueryWrapper<OutInventory> queryWrapper = new QueryWrapper<>();
 
         PageHelper.startPage(vo.getPageNum(),vo.getPageSize());
-        List<OutInventory> outInventories = outInventoryMapper.selectList(new QueryWrapper<>());
-        PageInfo<OutInventory> outInventoryPageInfo = new PageInfo<>(outInventories);
-        return outInventoryPageInfo;
+        List<OutInventoryRVO> outInventories = outInventoryMapper.selectByParam(queryWrapper);
+        return new PageInfo<>(outInventories);
     }
 }

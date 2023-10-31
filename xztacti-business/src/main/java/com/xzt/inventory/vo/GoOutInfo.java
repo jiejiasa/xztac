@@ -13,6 +13,18 @@ public class GoOutInfo {
     private String info;
 
 
-    private Integer settleStatus;
+    private String twoPeopleId;
+
+
+    private String outboundReason;
+
+    private String parkingFees;
+
+
+    private Integer paid;
+
+
+    private String vehicleRecipient;
+
 
 }

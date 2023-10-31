@@ -4,4 +4,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xzt.inventory.mapper.OutInventoryMapper">
 
+    <select id="selectByParam" resultType="com.xzt.inventory.rvo.OutInventoryRVO">
+        select o.id,
+                o.in_man_id,
+            o.outbound_reason,
+            su.nick_name,
+            o.parking_fees,
+            o.paid,
+            o.create_time,
+            o.vehicle_recipient,
+            im.customer_name,
+            im.status
+        from out_inventory as o
+        left join inventory_management im on o.in_man_id = im.id
+        left join sys_user su on o.creator_id = su.user_id
+            ${ew.customSqlSegment}
+    </select>
 </mapper>

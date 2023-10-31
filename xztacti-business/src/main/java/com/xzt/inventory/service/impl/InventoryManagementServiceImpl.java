@@ -8,7 +8,9 @@ import com.github.pagehelper.PageInfo;
 import com.xzt.common.core.domain.AjaxResult;
 import com.xzt.common.core.domain.entity.SysUser;
 import com.xzt.common.utils.SecurityUtils;
+import com.xzt.common.utils.bean.BeanUtils;
 import com.xzt.inventory.domain.InventoryManagement;
+import com.xzt.inventory.domain.OutInventory;
 import com.xzt.inventory.mapper.InventoryManagementMapper;
 import com.xzt.inventory.rvo.GoOutInventoryRVO;
 import com.xzt.inventory.service.InventoryManagementService;
@@ -91,9 +93,13 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("assignee0",goOutInfo.getFirstPeopleId());
-        map.put("assignee1","101");
+        map.put("assignee1",goOutInfo.getTwoPeopleId());
 
-        String outInventory = processService.startProcessInstance("outInventory", goOutInfo.getId(), map);
+        String auditId = processService.startProcessInstance("outInventory", goOutInfo.getId(), map);
+
+
+        OutInventory outInventory = new OutInventory();
+        BeanUtils.copyProperties(goOutInfo,outInventory);
 
 
 

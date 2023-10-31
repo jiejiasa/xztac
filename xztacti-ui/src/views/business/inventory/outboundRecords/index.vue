@@ -23,51 +23,36 @@
         prop="customerName"
         label="客户名称"  width="auto">
       </el-table-column>
+
       <el-table-column
-        prop="region"
-        label="地区"  width="auto">
+        prop="outboundReason"
+        label="出库原因"  width="auto">
       </el-table-column>
+
       <el-table-column
-        prop="businessType"
-        label="业务类型"  width="auto">
+        prop="parkingFees"
+        label="停车费用"  width="auto">
       </el-table-column>
+
+
+
       <el-table-column
-        prop="licensPlateNumber"
-        label="车牌号"
+        prop="createTime"
+        label="出庫發起時間"  width="auto">
+      </el-table-column>
+
+      <el-table-column
+        prop="vehicleRecipient"
+        label="车辆接收人"  width="auto">
+      </el-table-column>
+
+
+      <el-table-column
+        prop="nickName"
+        label="出庫發起人"
         width="auto">
       </el-table-column>
-      <el-table-column
-        prop="inboundDate"
-        label="入库日期" width="auto">
-      </el-table-column>
-      <el-table-column
-        prop="clearanceTeam"
-        label="清收团队" width="auto">
-      </el-table-column>
-      <el-table-column
-        prop="pickUpFee"
-        label="清收费用" width="auto">
-      </el-table-column>
 
-      <el-table-column
-        prop="inDay"
-        label="在库天数" width="auto">
-      </el-table-column>
-
-      <el-table-column
-        prop="inDayMany"
-        label="停车费用" width="auto">
-      </el-table-column>
-
-
-      <el-table-column
-        prop="settleStatus"
-        label="是否支付" width="auto">
-        <template slot-scope="scope">
-          <span v-if="scope.row.settleStatus === 0">未支付</span>
-          <span v-if="scope.row.settleStatus === 1">已支付</span>
-        </template>
-      </el-table-column>
       <el-table-column
         prop="status"
         label="状态" width="auto">
@@ -78,13 +63,25 @@
         </template>
       </el-table-column>
 
-
       <el-table-column
-        prop="creatorId"
-        label="入库人名称"
-        width="auto">
+        prop="paid"
+        label="是否已付"  width="auto">
+        <template slot-scope="scope">
+          <span v-if="scope.row.status === 0">未付</span>
+          <span v-if="scope.row.status === 1">已付</span>
+        </template>
       </el-table-column>
 
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="200">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="getInfo(scope.row)"
+          >查看</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <pagination
       v-show="total>0"
@@ -95,18 +92,115 @@
     />
 
 
+
+
+    <el-dialog :title="title" :visible.sync="open" width="1200px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="客户名称:" prop="customerName">
+              <el-input @input = "changeSequence"  v-model="form.customerName" placeholder="客户名称" maxlength="50" :disabled="edit"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="地区:" prop="region">
+              <el-input  @input = "changeSequence" v-model="form.region" placeholder="地区" value="ajkdsfhk" maxlength="50" :disabled="edit"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="业务类型:" prop="businessType">
+              <el-input  @input = "changeSequence" v-model="form.businessType"   placeholder="业务类型" maxlength="50" :disabled="edit"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="车牌号:" prop="licensPlateNumber">
+              <el-input  @input = "changeSequence" v-model="form.licensPlateNumber" placeholder="车牌号" maxlength="50" :disabled="edit"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="入库日期:" prop="inboundDate">
+              <el-date-picker
+                value-format="yyyy-MM-dd"
+                @input = "changeSequence"
+                v-model="form.inboundDate"
+                align="right"
+                type="date"
+                style="width:100%"
+                :disabled="edit"
+                placeholder="选择日期"
+                :picker-options="pickerOptions">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="品牌型号:" prop="makeAndModel">
+              <el-input  @input = "changeSequence" v-model="form.makeAndModel" placeholder="品牌型号" maxlength="50" :disabled="edit"/>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="停放车库:" prop="parkingGarage">
+              <el-input @input = "changeSequence" v-model="form.parkingGarage"   placeholder="停放车库" maxlength="50":disabled="edit"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="清收团队:" prop="clearanceTeam">
+              <el-input  @input = "changeSequence" v-model="form.clearanceTeam" placeholder="清收团队" maxlength="50" :disabled="edit"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="清收费用:" prop="pickUpFee">
+              <el-input @input = "changeSequence" v-model="form.pickUpFee" oninput ="value=value.replace(/[^0-9.]/g,'')"   placeholder="清收费用" maxlength="50" :disabled="edit"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="是否支付:" prop="settleStatus">
+              <template>
+                <el-select v-model="form.settleStatus" filterable placeholder="请选择"
+                           style="width:100%">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </template>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="备注:" prop="remark">
+          <el-input  type="textarea" :rows="5" @input = "changeSequence" v-model="form.remark" placeholder="备注" maxlength="300" />
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+
   </div>
 </template>
 
 <script>
-import { getList} from "@/api/crk/crk";
+import { getList, getOUtList } from '@/api/crk/crk'
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
-  name: "Dept",
-  dicts: ['sys_normal_disable'],
-  components: { Treeselect },
+
   data() {
     return {
       // 遮罩层
@@ -118,8 +212,6 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 是否展开，默认全部展开
-      isExpandAll: true,
       // 重新渲染表格状态
       refreshTable: true,
       // 查询参数
@@ -136,10 +228,20 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询部门列表 */
+
+
+
+    getInfo() {
+
+
+    },
+
+
+
+    /** 查询出庫列表 */
     getList() {
       this.loading = true;
-      getList(this.queryParams).then(response => {
+      getOUtList(this.queryParams).then(response => {
         this.crkList = response.list;
         this.total = response.total;
         this.loading = false;
@@ -153,7 +255,6 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-
       };
       this.resetForm("form");
     },
@@ -166,42 +267,7 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    /** 新增按钮操作 */
-    handleAdd(row) {
-      this.reset();
-      if (row != undefined) {
-        this.form.parentId = row.deptId;
-      }
-      this.open = true;
-      this.title = "添加部门";
-      listDept().then(response => {
-        this.deptOptions = this.handleTree(response.data, "deptId");
-      });
-    },
-    /** 展开/折叠操作 */
-    toggleExpandAll() {
-      this.refreshTable = false;
-      this.isExpandAll = !this.isExpandAll;
-      this.$nextTick(() => {
-        this.refreshTable = true;
-      });
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      getDept(row.deptId).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改部门";
-        listDeptExcludeChild(row.deptId).then(response => {
-          this.deptOptions = this.handleTree(response.data, "deptId");
-          if (this.deptOptions.length == 0) {
-            const noResultsOptions = { deptId: this.form.parentId, deptName: this.form.parentName, children: [] };
-            this.deptOptions.push(noResultsOptions);
-          }
-        });
-      });
-    },
+
 
     /** 删除按钮操作 */
     handleDelete(row) {
