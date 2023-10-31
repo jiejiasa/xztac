@@ -10,28 +10,79 @@
     <el-table
       :data="crkList"
       border
-      style="width: 100%">
+      style="width: 100%"
+      :header-cell-style="{'text-align':'center'}"
+    >
+      <el-table-column label="序号" width="50">
+        <template slot-scope="scope">
+          {{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}
+        </template>
+      </el-table-column>
+
       <el-table-column
-        prop="inventoryCode"
-        label="仓库编号"
-        width="180">
+        prop="customerName"
+        label="客户名称"  width="auto">
       </el-table-column>
       <el-table-column
-        prop="carInformation"
-        label="车辆信息"
-        width="180">
+        prop="region"
+        label="地区"  width="auto">
       </el-table-column>
       <el-table-column
-        prop="carNum"
-        label="数量">
+        prop="businessType"
+        label="业务类型"  width="auto">
       </el-table-column>
       <el-table-column
-        prop="time"
-        label="时间">
+        prop="licensPlateNumber"
+        label="车牌号"
+        width="auto">
       </el-table-column>
       <el-table-column
-        prop="time"
-        label="状态">
+        prop="inboundDate"
+        label="入库日期" width="auto">
+      </el-table-column>
+      <el-table-column
+        prop="clearanceTeam"
+        label="清收团队" width="auto">
+      </el-table-column>
+      <el-table-column
+        prop="pickUpFee"
+        label="清收费用" width="auto">
+      </el-table-column>
+
+      <el-table-column
+        prop="inDay"
+        label="在库天数" width="auto">
+      </el-table-column>
+
+      <el-table-column
+        prop="inDayMany"
+        label="停车费用" width="auto">
+      </el-table-column>
+
+
+      <el-table-column
+        prop="settleStatus"
+        label="是否支付" width="auto">
+        <template slot-scope="scope">
+          <span v-if="scope.row.settleStatus === 0">未支付</span>
+          <span v-if="scope.row.settleStatus === 1">已支付</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="status"
+        label="状态" width="auto">
+        <template slot-scope="scope">
+          <span v-if="scope.row.status === 0">在库</span>
+          <span v-if="scope.row.status === 1">审核中</span>
+          <span v-if="scope.row.status === 2">出库</span>
+        </template>
+      </el-table-column>
+
+
+      <el-table-column
+        prop="creatorId"
+        label="入库人名称"
+        width="auto">
       </el-table-column>
 
     </el-table>
@@ -102,14 +153,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        deptId: undefined,
-        parentId: undefined,
-        deptName: undefined,
-        orderNum: undefined,
-        leader: undefined,
-        phone: undefined,
-        email: undefined,
-        status: "0"
+
       };
       this.resetForm("form");
     },

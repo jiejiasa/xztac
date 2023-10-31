@@ -17,61 +17,113 @@
           @click="handleAdd"
         >入库</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table
       :data="crkList"
       border
-      style="width: 100%">
-      <el-table-column type="selection" width="55" align="center" />
+      style="width: 100%"
+      :header-cell-style="{'text-align':'center'}">
+
+
       <el-table-column label="序号" width="50">
         <template slot-scope="scope">
           {{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}
         </template>
       </el-table-column>
+
       <el-table-column
-        prop="inventoryCode"
-        label="仓库编号"
-        width="180">
+        prop="customerName"
+        label="客户名称"  width="auto">
       </el-table-column>
       <el-table-column
-        prop="carInformation"
-        label="车辆信息"
-        width="180">
+        prop="region"
+        label="地区"  width="auto">
       </el-table-column>
       <el-table-column
-        prop="carNum"
-        label="数量">
+        prop="businessType"
+        label="业务类型"  width="auto">
       </el-table-column>
       <el-table-column
-        prop="time"
-        label="时间">
+        prop="licensPlateNumber"
+        label="车牌号"
+        width="auto">
       </el-table-column>
       <el-table-column
-        prop="time"
-        label="状态">
+        prop="inboundDate"
+        label="入库日期" width="auto">
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        prop="clearanceTeam"
+        label="清收团队" width="auto">
+      </el-table-column>
+      <el-table-column
+        prop="pickUpFee"
+        label="清收费用" width="auto">
+      </el-table-column>
+
+      <el-table-column
+        prop="inDay"
+        label="在库天数" width="auto">
+      </el-table-column>
+
+      <el-table-column
+        prop="inDayMany"
+        label="停车费用" width="auto">
+      </el-table-column>
+
+
+      <el-table-column
+        prop="settleStatus"
+        label="是否支付" width="auto">
+        <template slot-scope="scope">
+          <span v-if="scope.row.settleStatus === 0">未支付</span>
+          <span v-if="scope.row.settleStatus === 1">已支付</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="status"
+        label="状态" width="auto">
+        <template slot-scope="scope">
+        <span v-if="scope.row.status === 0">在库</span>
+        <span v-if="scope.row.status === 1">审核中</span>
+        <span v-if="scope.row.status === 2">出库</span>
+        </template>
+      </el-table-column>
+
+
+      <el-table-column
+        prop="creatorId"
+        label="入库人名称"
+        width="auto">
+      </el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="200">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
+            v-if="scope.row.status !== 1"
             @click="handleUpdate(scope.row)"
           >编辑</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
+            v-if="scope.row.status !== 1"
             @click="getGoOut(scope.row)"
           >出库</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
+            v-if="scope.row.status !== 1"
             @click="handleDelete(scope.row)"
           >删除</el-button>
+          <el-button type="primary"
+                     size="small"
+                     v-if="scope.row.status === 1"
+                     round>审核中</el-button>
         </template>
       </el-table-column>
 
@@ -85,29 +137,94 @@
     />
 
     <!-- 添加或修改库存管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="1200px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
 
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="客户名称:" prop="customerName">
+              <el-input @input = "changeSequence"  v-model="form.customerName" placeholder="客户名称" maxlength="50" :disabled="edit"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="地区:" prop="region">
+              <el-input  @input = "changeSequence" v-model="form.region" placeholder="地区" value="ajkdsfhk" maxlength="50" :disabled="edit"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="业务类型:" prop="businessType">
+              <el-input  @input = "changeSequence" v-model="form.businessType"   placeholder="业务类型" maxlength="50" :disabled="edit"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="车牌号:" prop="licensPlateNumber">
+              <el-input  @input = "changeSequence" v-model="form.licensPlateNumber" placeholder="车牌号" maxlength="50" :disabled="edit"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="入库日期:" prop="inboundDate">
+              <el-date-picker
+                value-format="yyyy-MM-dd"
+                @input = "changeSequence"
+                v-model="form.inboundDate"
+                align="right"
+                type="date"
+                style="width:100%"
+                :disabled="edit"
+                placeholder="选择日期"
+                :picker-options="pickerOptions">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="品牌型号:" prop="makeAndModel">
+              <el-input  @input = "changeSequence" v-model="form.makeAndModel" placeholder="品牌型号" maxlength="50" :disabled="edit"/>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="停放车库:" prop="parkingGarage">
+              <el-input @input = "changeSequence" v-model="form.parkingGarage"   placeholder="停放车库" maxlength="50":disabled="edit"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="清收团队:" prop="clearanceTeam">
+              <el-input  @input = "changeSequence" v-model="form.clearanceTeam" placeholder="清收团队" maxlength="50" :disabled="edit"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="仓库编号" prop="inventoryCode">
-              <el-input v-model="form.inventoryCode" placeholder="仓库编号" maxlength="20" />
+            <el-form-item label="清收费用:" prop="pickUpFee">
+              <el-input @input = "changeSequence" v-model="form.pickUpFee" oninput ="value=value.replace(/[^0-9.]/g,'')"   placeholder="清收费用" maxlength="50" :disabled="edit"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="车辆信息" prop="carInformation">
-              <el-input v-model="form.carInformation" placeholder="车辆信息" maxlength="11" />
+            <el-form-item label="是否支付:" prop="settleStatus">
+              <template>
+              <el-select v-model="form.settleStatus" filterable placeholder="请选择"
+                         style="width:100%">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+              </template>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="数量" prop="carNum">
-              <el-input v-model="form.carNum" type="number"  placeholder="数量" maxlength="20"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <el-form-item label="备注:" prop="remark">
+          <el-input  type="textarea" :rows="5" @input = "changeSequence" v-model="form.remark" placeholder="备注" maxlength="300" />
+        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -117,34 +234,102 @@
     </el-dialog>
 
 
-
 <!--    出庫申請頁面-->
-    <el-dialog :title="auditInfo.title" :visible.sync="auditInfo.outing" width="600px" append-to-body>
+    <el-dialog :title="auditInfo.title" :visible.sync="auditInfo.outing" width="1200px" append-to-body>
       <el-form ref="auditForm" :model="auditForm" :rules="auditInfo.rules" label-width="80px">
 
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="客户名称:" prop="customerName">
+              <el-input @input = "changeSequence"  v-model="auditForm.inventoryManagement.customerName" placeholder="客户名称" maxlength="50" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="地区:" prop="region">
+              <el-input  @input = "changeSequence" v-model="auditForm.inventoryManagement.region" placeholder="地区" value="ajkdsfhk" maxlength="50" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="业务类型:" prop="businessType">
+              <el-input  @input = "changeSequence" v-model="auditForm.inventoryManagement.businessType"   placeholder="业务类型" maxlength="50" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="车牌号:" prop="licensPlateNumber">
+              <el-input  @input = "changeSequence" v-model="auditForm.inventoryManagement.licensPlateNumber" placeholder="车牌号" maxlength="50" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="入库日期:" prop="inboundDate">
+              <el-date-picker
+                value-format="yyyy-MM-dd"
+                @input = "changeSequence"
+                v-model="form.inboundDate"
+                align="right"
+                type="date"
+                :disabled="true"
+                style="width:100%"
+
+                placeholder="选择日期"
+                :picker-options="pickerOptions">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="品牌型号:" prop="makeAndModel">
+              <el-input  @input = "changeSequence" v-model="auditForm.inventoryManagement.makeAndModel" placeholder="品牌型号" maxlength="50" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="停放车库:" prop="parkingGarage">
+              <el-input @input = "changeSequence" v-model="auditForm.inventoryManagement.parkingGarage"   placeholder="停放车库" maxlength="50":disabled="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="清收团队:" prop="clearanceTeam">
+              <el-input  @input = "changeSequence" v-model="auditForm.inventoryManagement.clearanceTeam" placeholder="清收团队" maxlength="50" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="仓库编号" prop="inventoryCode">
-              <el-input v-model="auditForm.inventoryManagement.inventoryCode" placeholder="仓库编号" maxlength="20" />
+            <el-form-item label="清收费用:" prop="pickUpFee">
+              <el-input @input = "changeSequence" v-model="auditForm.inventoryManagement.pickUpFee" oninput ="value=value.replace(/[^0-9.]/g,'')"   placeholder="清收费用" maxlength="50" :disabled="true"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="车辆信息" prop="carInformation">
-              <el-input v-model="auditForm.inventoryManagement.carInformation" placeholder="车辆信息" maxlength="11" />
+            <el-form-item label="是否支付:" prop="settleStatus">
+              <template>
+                <el-select v-model="auditForm.inventoryManagement.settleStatus" filterable placeholder="请选择"
+                           style="width:100%"
+                           :disabled = "true">
+                  <el-option
+
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </template>
             </el-form-item>
           </el-col>
         </el-row>
+        <el-form-item label="备注:" prop="remark">
+          <el-input  type="textarea" :rows="5" @input = "changeSequence" v-model="auditForm.inventoryManagement.remark" placeholder="备注" maxlength="300" :disabled="true"/>
+        </el-form-item>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="数量" prop="carNum">
-              <el-input v-model="auditForm.inventoryManagement.carNum" type="number"  placeholder="数量" maxlength="20"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="審核人" prop="firstPeople">
+            <el-form-item label="審核人:" prop="firstPeople">
               <el-select  v-model="auditForm.firstPeopleId" filterable placeholder="第一審核人">
                 <el-option
                   v-for="item in auditForm.firstPeople"
@@ -155,13 +340,44 @@
               </el-select>
             </el-form-item>
           </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="是否结清" prop="settleStatus">
-              <el-input v-model="auditForm.settleStatus" type="number"  placeholder="是否结清" maxlength="20"/>
-            </el-form-item>
-          </el-col>
         </el-row>
+
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="出库原因:" prop="outboundReason">
+                <el-input @input = "changeSequence" v-model="auditForm.outboundReason"   placeholder="出库原因" maxlength="50"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="停车费用:" prop="parkingFees">
+                <el-input  @input = "changeSequence" v-model="auditForm.parkingFees" placeholder="停车费用" maxlength="50" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="是否已付:" prop="paid">
+                <template>
+                  <el-select v-model="auditForm.paid" filterable placeholder="请选择"
+                             style="width:100%">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </template>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="车辆接收人:" prop="vehicleRecipient">
+                <el-input  @input = "changeSequence" v-model="auditForm.vehicleRecipient" placeholder="车辆接收人" maxlength="50" style="width: 100%" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -181,6 +397,19 @@ export default {
   name: "inventoryManagement",
   data() {
     return {
+
+      //是否支付
+      options:[
+        {
+          value: 0,
+          label: '未支付'
+        }, {
+          value: 1,
+          label: '已支付'
+        },
+      ],
+
+      edit: false,
       // 遮罩层
       loading: true,
       // 表格树数据
@@ -209,16 +438,43 @@ export default {
         firstPeople:[],
         firstPeopleId:undefined,
         settleStatus:undefined,
+        outboundReason:undefined,
+        parkingFees:undefined,
+        paid:undefined,
+        vehicleRecipient:undefined,
 
       },
       auditInfo: {
         title: '发起审核',
         outing:false,
-
         rules: {
-
         }
-      }
+      },
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+        shortcuts: [{
+          text: '今天',
+          onClick(picker) {
+            picker.$emit('pick', new Date());
+          }
+        }, {
+          text: '昨天',
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24);
+            picker.$emit('pick', date);
+          }
+        }, {
+          text: '一周前',
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', date);
+          }
+        }]
+      },
     };
   },
   created() {
@@ -247,6 +503,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.edit = false;
       this.reset();
     },
 
@@ -280,8 +537,6 @@ export default {
       this.reset();
       this.open = true;
       this.title = "新增库存";
-
-
     },
 
     /** 修改按钮操作 */
@@ -290,6 +545,7 @@ export default {
       getInventoryInfo(row.id).then(response => {
         this.form = response.data;
         this.open = true;
+        this.edit = true;
         this.title = "修改库存信息";
       });
     },
@@ -301,6 +557,7 @@ export default {
             updateDept(this.form).then(response => {
               this.$modal.msgSuccess("修改库存信息成功");
               this.open = false;
+              this.edit = false;
               this.getList();
             });
           } else {
@@ -324,19 +581,23 @@ export default {
         firstPeopleId: form.firstPeopleId,
         settleStatus: form.settleStatus,
       }
-
       goOut(param);
       this.auditInfo.outing = false;
+      this.edit = false;
       this.getList();
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$modal.confirm('是否确认删除id为"' + row.id + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除客户为"' + row.customerName+ '"的数据项？').then(function() {
         return delInventory(row.id);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
+    },
+
+    changeSequence(){
+      this.$forceUpdate();
     }
   }
 };

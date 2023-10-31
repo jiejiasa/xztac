@@ -1,11 +1,13 @@
 package com.xzt.inventory.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xzt.common.core.domain.AjaxResult;
 import com.xzt.common.core.domain.entity.SysUser;
+import com.xzt.common.utils.SecurityUtils;
 import com.xzt.inventory.domain.InventoryManagement;
 import com.xzt.inventory.mapper.InventoryManagementMapper;
 import com.xzt.inventory.rvo.GoOutInventoryRVO;
@@ -103,6 +105,24 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
     public Boolean auditFlow(HandleAuditParam param){
         Boolean aBoolean = processService.handleAudit(param);
         return aBoolean;
+    }
+
+    @Override
+    public Boolean inster(InventoryManagement inventoryManagement) {
+
+        inventoryManagement.setCreatorId(SecurityUtils.getUserId());
+        return this.save(inventoryManagement);
+    }
+
+    @Override
+    public AjaxResult deleteById(Integer id) {
+
+        UpdateWrapper<InventoryManagement> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id",id);
+        updateWrapper.set("del_flag",1);
+        boolean update = this.update(null, updateWrapper);
+        return  AjaxResult.success(update);
+
     }
 
 

@@ -3,8 +3,6 @@ package com.xzt.web.crk;
 
 import com.github.pagehelper.PageInfo;
 import com.xzt.common.core.domain.AjaxResult;
-import com.xzt.common.utils.SecurityUtils;
-import com.xzt.common.utils.bean.BeanUtils;
 import com.xzt.inventory.domain.InInventory;
 import com.xzt.inventory.domain.InventoryManagement;
 import com.xzt.inventory.domain.OutInventory;
@@ -17,8 +15,6 @@ import com.xzt.inventory.vo.InventoryManagementSelectVO;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/inventory")
@@ -77,21 +73,17 @@ public class InventoryController {
      */
     @PostMapping("/save")
     public Boolean save(@RequestBody InventoryManagement inventoryManagement){
-        InInventory inInventory = new InInventory();
-        BeanUtils.copyProperties(inventoryManagement,inInventory);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String format = formatter.format(new Date());
-        inInventory.setTime( format);
-        inInventory.setPeopleId(SecurityUtils.getUserId());
-        inInventoryService.save(inInventory);
-        return inventoryManagementService.save(inventoryManagement);
+
+        Boolean id = inventoryManagementService.inster(inventoryManagement);
+
+
+        return inInventoryService.inster(inventoryManagement);
+
     }
 
 
     @GetMapping("/getGoOut")
     public GoOutInventoryRVO getGoOut(@RequestParam("id") Integer id){
-
-
 
         GoOutInventoryRVO goOutInventoryRVO = inventoryManagementService.getGoOut(id);
 
@@ -103,7 +95,7 @@ public class InventoryController {
 
     @GetMapping("/delInventory")
     public AjaxResult delInventory(@RequestParam("id") Integer id){
-        return inventoryManagementService.delInventory(id);
+        return inventoryManagementService.deleteById(id);
     }
 
 

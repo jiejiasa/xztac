@@ -5,7 +5,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.xzt.inventory.mapper.InventoryManagementMapper">
 
     <select id="selectByParam" resultType="com.xzt.inventory.domain.InventoryManagement">
-        select *
-        from inventory_management
+        SELECT id,
+               creator_id,
+               del_flag,
+               customer_name,
+               region,
+               business_type,
+               licens_plate_number,
+               parking_garage,
+               make_and_model,
+               status,
+               inbound_date,
+               clearance_team,
+               pick_up_fee,
+               settle_status,
+               remark
+        FROM inventory_management
+        WHERE del_flag = 0
     </select>
 </mapper>

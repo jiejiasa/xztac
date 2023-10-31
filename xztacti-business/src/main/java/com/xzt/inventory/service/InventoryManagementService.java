@@ -24,4 +24,8 @@ public interface InventoryManagementService extends IService<InventoryManagement
 
 
          Boolean auditFlow(HandleAuditParam param);
+
+        Boolean inster(InventoryManagement inventoryManagement);
+
+        AjaxResult deleteById(Integer id);
 }
