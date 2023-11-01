@@ -14,22 +14,30 @@ import com.xzt.inventory.domain.OutInventory;
 import com.xzt.inventory.mapper.InventoryManagementMapper;
 import com.xzt.inventory.rvo.GoOutInventoryRVO;
 import com.xzt.inventory.service.InventoryManagementService;
+import com.xzt.inventory.service.OutInventoryService;
 import com.xzt.inventory.vo.GoOutInfo;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
 import com.xzt.service.IProcessService;
 import com.xzt.system.service.ISysUserService;
 import com.xzt.vo.HandleAuditParam;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 
 @Service
+@Transactional
 public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagementMapper, InventoryManagement> implements InventoryManagementService {
 
     @Resource
     private InventoryManagementMapper inventoryManagementMapper;
+
+
+
+    @Resource
+    private OutInventoryService outInventoryService;
 
 
     @Resource
@@ -91,26 +99,45 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
     public Boolean goOut(GoOutInfo goOutInfo) {
 
 
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("assignee0",goOutInfo.getFirstPeopleId());
-        map.put("assignee1",goOutInfo.getTwoPeopleId());
-
-        String auditId = processService.startProcessInstance("outInventory", goOutInfo.getId(), map);
-
-
         OutInventory outInventory = new OutInventory();
         BeanUtils.copyProperties(goOutInfo,outInventory);
+        outInventory.setInManId(Integer.valueOf(goOutInfo.getId()));
+        outInventory.setCreatorId(SecurityUtils.getUserId().intValue());
 
+        boolean save = outInventoryService.save(outInventory);
 
+        if (!save) {
+           return false;
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("assignee0", goOutInfo.getFirstPeopleId());
+        map.put("assignee1", goOutInfo.getTwoPeopleId());
+        String auditId = processService.startProcessInstance("outInventory", goOutInfo.getId(), map);
 
-        return true;
+        UpdateWrapper<InventoryManagement> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id",goOutInfo.getId())
+                .set("status",1);
+        boolean update = this.update(null, updateWrapper);
+        return update;
     }
 
 
 
     public Boolean auditFlow(HandleAuditParam param){
+        UpdateWrapper<InventoryManagement> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id",param.getAuditId());
+
         Boolean aBoolean = processService.handleAudit(param);
-        return aBoolean;
+
+        if (!param.isPassed() && aBoolean){
+            updateWrapper.set("status",2);
+            this.update(null,updateWrapper);
+        }
+        if (param.isPassed() && aBoolean){
+            updateWrapper.set("status",3);
+            this.update(null,updateWrapper);
+        }
+        return true;
     }
 
     @Override

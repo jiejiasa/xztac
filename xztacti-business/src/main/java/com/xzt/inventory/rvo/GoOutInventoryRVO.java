@@ -15,7 +15,6 @@ public class GoOutInventoryRVO {
     private InventoryManagement inventoryManagement;
 
 
-
     private List<SysUser> firstPeople = new ArrayList<>();
 
 

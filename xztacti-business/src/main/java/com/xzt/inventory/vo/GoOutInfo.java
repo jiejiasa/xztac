@@ -10,8 +10,6 @@ public class GoOutInfo {
 
     private String firstPeopleId;
 
-    private String info;
-
 
     private String twoPeopleId;
 

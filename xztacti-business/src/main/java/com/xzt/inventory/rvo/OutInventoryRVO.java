@@ -5,8 +5,6 @@ import lombok.Data;
 @Data
 public class OutInventoryRVO {
 
-
-
     private Integer id;
 
     private Integer inManId;

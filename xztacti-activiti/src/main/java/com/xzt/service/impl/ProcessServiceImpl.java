@@ -4,8 +4,11 @@ import com.xzt.common.utils.PageUtils;
 import com.xzt.common.utils.SecurityUtils;
 import com.xzt.service.IProcessService;
 import com.xzt.vo.HandleAuditParam;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProcessServiceImpl implements IProcessService {
@@ -25,6 +29,9 @@ public class ProcessServiceImpl implements IProcessService {
 
     @Resource
     private TaskService taskService;
+
+    @Resource
+    private HistoryService historyService;
 
 
 
@@ -72,26 +79,34 @@ public class ProcessServiceImpl implements IProcessService {
 
 
     public List<String> selectBusinessKeyList(String processDefinitionKey, Long userId) {
-        // 1. 基于流程定义 key + 版本以及当前用户 id 作为负责人，查询任务列表 => TaskService
-        List<Task> list = taskService.createTaskQuery()
-                .processDefinitionKey(processDefinitionKey)
-                .taskAssignee(userId + "")
-                .list();
 
-        if (CollectionUtils.isEmpty(list)) {
+        String type = "TODO";
+        // 1. 根据流程信息对象 + 当前用户查询已完成的历史任务
+        HistoricTaskInstanceQuery taskInstanceQuery = historyService.createHistoricTaskInstanceQuery()
+                .processDefinitionKey(processDefinitionKey)
+                .taskAssignee(userId + "");
+        if (type.equals("TODO")) {
             // 如果查不到待办任务，直接返回空数据
+            taskInstanceQuery.unfinished();
+        }else {
+            taskInstanceQuery.finished();
+        }
+
+        List<HistoricTaskInstance> list = taskInstanceQuery.list();
+
+
+        // 2. 如果查不到，直接返回空集合
+        if (CollectionUtils.isEmpty(list)) {
             return Collections.emptyList();
         }
 
-        // 2. 通过任务列表得到流程实例 id 列表
-        Set<String> instanceIdList = new HashSet<>();
-        for (Task task : list) {
-            instanceIdList.add(task.getProcessInstanceId());
-        }
+        Set<String> collect = list.stream()
+                .map(HistoricTaskInstance::getProcessInstanceId)
+                .collect(Collectors.toSet());
 
         // 3. 基于流程实例 id 列表，查询流程实例列表，得到业务标识列表 => RuntimeService
         List<ProcessInstance> instances = runtimeService.createProcessInstanceQuery()
-                .processInstanceIds(instanceIdList)
+                .processInstanceIds(collect)
                 .list();
 
         // 4. 将流程实例集合转换为 businessKey 集合

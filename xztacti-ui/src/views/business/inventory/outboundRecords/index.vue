@@ -38,7 +38,7 @@
 
       <el-table-column
         prop="createTime"
-        label="出庫發起時間"  width="auto">
+        label="出库发起时间"  width="auto">
       </el-table-column>
 
       <el-table-column
@@ -49,7 +49,7 @@
 
       <el-table-column
         prop="nickName"
-        label="出庫發起人"
+        label="出库发起人"
         width="auto">
       </el-table-column>
 
@@ -59,7 +59,8 @@
         <template slot-scope="scope">
           <span v-if="scope.row.status === 0">在库</span>
           <span v-if="scope.row.status === 1">审核中</span>
-          <span v-if="scope.row.status === 2">出库</span>
+          <span v-if="scope.row.status === 2">审核未通过</span>
+          <span v-if="scope.row.status === 3">出库</span>
         </template>
       </el-table-column>
 
@@ -95,29 +96,28 @@
 
 
     <el-dialog :title="title" :visible.sync="open" width="1200px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-
+      <el-form ref="form" :model="form"  label-width="auto">
         <el-row>
           <el-col :span="12">
             <el-form-item label="客户名称:" prop="customerName">
-              <el-input @input = "changeSequence"  v-model="form.customerName" placeholder="客户名称" maxlength="50" :disabled="edit"/>
+              <el-input  v-model="form.inventoryManagement.customerName" placeholder="客户名称" maxlength="50" :disabled="true"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="地区:" prop="region">
-              <el-input  @input = "changeSequence" v-model="form.region" placeholder="地区" value="ajkdsfhk" maxlength="50" :disabled="edit"/>
+              <el-input  v-model="form.inventoryManagement.region" placeholder="地区" value="ajkdsfhk" maxlength="50" :disabled="true"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="业务类型:" prop="businessType">
-              <el-input  @input = "changeSequence" v-model="form.businessType"   placeholder="业务类型" maxlength="50" :disabled="edit"/>
+              <el-input v-model="form.inventoryManagement.businessType"   placeholder="业务类型" maxlength="50" :disabled="true"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="车牌号:" prop="licensPlateNumber">
-              <el-input  @input = "changeSequence" v-model="form.licensPlateNumber" placeholder="车牌号" maxlength="50" :disabled="edit"/>
+              <el-input  v-model="form.inventoryManagement.licensPlateNumber" placeholder="车牌号" maxlength="50" :disabled="true"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -126,20 +126,20 @@
             <el-form-item label="入库日期:" prop="inboundDate">
               <el-date-picker
                 value-format="yyyy-MM-dd"
-                @input = "changeSequence"
                 v-model="form.inboundDate"
                 align="right"
                 type="date"
+                :disabled="true"
                 style="width:100%"
-                :disabled="edit"
                 placeholder="选择日期"
                 :picker-options="pickerOptions">
               </el-date-picker>
             </el-form-item>
           </el-col>
+
           <el-col :span="12">
             <el-form-item label="品牌型号:" prop="makeAndModel">
-              <el-input  @input = "changeSequence" v-model="form.makeAndModel" placeholder="品牌型号" maxlength="50" :disabled="edit"/>
+              <el-input  v-model="form.inventoryManagement.makeAndModel" placeholder="品牌型号" maxlength="50" :disabled="true"/>
             </el-form-item>
           </el-col>
 
@@ -147,12 +147,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="停放车库:" prop="parkingGarage">
-              <el-input @input = "changeSequence" v-model="form.parkingGarage"   placeholder="停放车库" maxlength="50":disabled="edit"/>
+              <el-input v-model="form.inventoryManagement.parkingGarage"   placeholder="停放车库" maxlength="50":disabled="true"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="清收团队:" prop="clearanceTeam">
-              <el-input  @input = "changeSequence" v-model="form.clearanceTeam" placeholder="清收团队" maxlength="50" :disabled="edit"/>
+              <el-input  v-model="form.inventoryManagement.clearanceTeam" placeholder="清收团队" maxlength="50" :disabled="true"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -160,14 +160,15 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="清收费用:" prop="pickUpFee">
-              <el-input @input = "changeSequence" v-model="form.pickUpFee" oninput ="value=value.replace(/[^0-9.]/g,'')"   placeholder="清收费用" maxlength="50" :disabled="edit"/>
+              <el-input  v-model="form.inventoryManagement.pickUpFee" oninput ="value=value.replace(/[^0-9.]/g,'')"   placeholder="清收费用" maxlength="50" :disabled="true"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="是否支付:" prop="settleStatus">
               <template>
-                <el-select v-model="form.settleStatus" filterable placeholder="请选择"
-                           style="width:100%">
+                <el-select v-model="form.inventoryManagement.settleStatus" filterable placeholder="请选择"
+                           style="width:100%"
+                           :disabled = "true">
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -180,12 +181,74 @@
           </el-col>
         </el-row>
         <el-form-item label="备注:" prop="remark">
-          <el-input  type="textarea" :rows="5" @input = "changeSequence" v-model="form.remark" placeholder="备注" maxlength="300" />
+          <el-input  type="textarea" :rows="5"  v-model="form.inventoryManagement.remark" placeholder="备注" maxlength="300" :disabled="true"/>
         </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="第一审核人:" prop="firstPeopleId" >
+              <el-select  v-model="form.firstPeopleId" filterable placeholder="第一审核人" style="width:100%"  :disabled="true">
+                <el-option
+                  v-for="item in form.firstPeople"
+                  :key="item.userId"
+                  :label="item.nickName"
+                  :value="item.userId">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="第二审核人:" prop="twoPeopleId" >
+              <el-select  v-model="form.twoPeopleId" filterable placeholder="第二审核人" style="width:100%"  :disabled="true">
+                <el-option
+                  v-for="item in form.twoPeople"
+                  :key="item.userId"
+                  :label="item.nickName"
+                  :value="item.userId">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="出库原因:" prop="outboundReason" >
+              <el-input  v-model="form.outboundReason"   placeholder="出库原因" maxlength="50"  :disabled="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="停车费用:" prop="parkingFees" >
+              <el-input   v-model="form.parkingFees" placeholder="停车费用" maxlength="50"  :disabled="true" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="是否已付:" prop="paid" >
+              <template>
+                <el-select v-model="form.paid" filterable placeholder="请选择"
+                           style="width:100%" :disabled="true">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </template>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="车辆接收人:" prop="vehicleRecipient">
+              <el-input   v-model="form.vehicleRecipient" placeholder="车辆接收人" maxlength="50" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
 
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -196,7 +259,6 @@
 
 <script>
 import { getList, getOUtList } from '@/api/crk/crk'
-import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {

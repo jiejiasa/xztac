@@ -75,8 +75,6 @@ public class InventoryController {
     public Boolean save(@RequestBody InventoryManagement inventoryManagement){
 
         Boolean id = inventoryManagementService.inster(inventoryManagement);
-
-
         return inInventoryService.inster(inventoryManagement);
 
     }

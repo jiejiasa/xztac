@@ -7,6 +7,7 @@ import com.xzt.inventory.service.InventoryManagementService;
 import com.xzt.inventory.service.InventoryToDoService;
 import com.xzt.service.IProcessService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -31,6 +32,9 @@ public class InventoryToDoServiceImpl implements InventoryToDoService {
 
         List<String> strings = processService.selectAuditTodoList();
         List<Integer> collect = strings.stream().map(Integer::valueOf).collect(Collectors.toList());
+        if(ObjectUtils.isEmpty(collect)){
+            return new PageInfo<>();
+        }
         List<InventoryManagement> inventoryManagements = inventoryManagementMapper.selectBatchIds(collect);
 
         PageInfo<InventoryManagement> inventoryManagementPageInfo = new PageInfo<>();
