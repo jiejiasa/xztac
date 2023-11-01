@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzt.inventory.mapper.XztGaragePriceMapper">
+
+    <select id="geList" resultType="com.xzt.inventory.rvo.GaragePiceListRVO">
+        select *
+        from xzt_garage_price ${ew.customSqlSegment}
+    </select>
+</mapper>

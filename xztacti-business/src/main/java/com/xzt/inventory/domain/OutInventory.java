@@ -22,6 +22,8 @@ public class OutInventory {
 
 
     private Integer creatorId;
+
     private String createTime;
+
     private Integer delFlag;
 }
