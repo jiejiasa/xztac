@@ -1,0 +1,100 @@
+
+update biz_payment_plan set rest_principal = 61713.38, principal_interest=2348.70, pay_principal=1,286.62, pay_interest=1,062.08 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 1;
+update biz_payment_plan set rest_principal = 60405.07, principal_interest=2348.70, pay_principal=1,308.31, pay_interest=1,040.38 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 2;
+update biz_payment_plan set rest_principal = 59074.70, principal_interest=2348.70, pay_principal=1,330.37, pay_interest=1,018.33 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 3;
+update biz_payment_plan set rest_principal = 57721.91, principal_interest=2348.70, pay_principal=1,352.79, pay_interest=995.90 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 4;
+update biz_payment_plan set rest_principal = 56346.31, principal_interest=2348.70, pay_principal=1,375.60, pay_interest=973.10 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 5;
+update biz_payment_plan set rest_principal = 54947.52, principal_interest=2348.70, pay_principal=1,398.79, pay_interest=949.90 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 6;
+update biz_payment_plan set rest_principal = 53525.15, principal_interest=2348.70, pay_principal=1,422.37, pay_interest=926.32 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 7;
+update biz_payment_plan set rest_principal = 52078.80, principal_interest=2348.70, pay_principal=1,446.35, pay_interest=902.34 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 8;
+update biz_payment_plan set rest_principal = 50608.06, principal_interest=2348.70, pay_principal=1,470.73, pay_interest=877.96 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 9;
+update biz_payment_plan set rest_principal = 49112.53, principal_interest=2348.70, pay_principal=1,495.53, pay_interest=853.17 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 10;
+update biz_payment_plan set rest_principal = 47591.79, principal_interest=2348.70, pay_principal=1,520.74, pay_interest=827.96 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 11;
+update biz_payment_plan set rest_principal = 46045.42, principal_interest=2348.70, pay_principal=1,546.38, pay_interest=802.32 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 12;
+update biz_payment_plan set rest_principal = 44472.97, principal_interest=2348.70, pay_principal=1,572.45, pay_interest=776.25 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 13;
+update biz_payment_plan set rest_principal = 42874.02, principal_interest=2348.70, pay_principal=1,598.96, pay_interest=749.74 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 14;
+update biz_payment_plan set rest_principal = 41248.10, principal_interest=2348.70, pay_principal=1,625.91, pay_interest=722.78 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 15;
+update biz_payment_plan set rest_principal = 39594.78, principal_interest=2348.70, pay_principal=1,653.32, pay_interest=695.37 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 16;
+update biz_payment_plan set rest_principal = 37913.59, principal_interest=2348.70, pay_principal=1,681.19, pay_interest=667.50 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 17;
+update biz_payment_plan set rest_principal = 36204.05, principal_interest=2348.70, pay_principal=1,709.54, pay_interest=639.16 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 18;
+update biz_payment_plan set rest_principal = 34465.70, principal_interest=2348.70, pay_principal=1,738.36, pay_interest=610.34 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 19;
+update biz_payment_plan set rest_principal = 32698.04, principal_interest=2348.70, pay_principal=1,767.66, pay_interest=581.03 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 20;
+update biz_payment_plan set rest_principal = 30900.58, principal_interest=2348.70, pay_principal=1,797.46, pay_interest=551.23 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 21;
+update biz_payment_plan set rest_principal = 29072.81, principal_interest=2348.70, pay_principal=1,827.76, pay_interest=520.93 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 22;
+update biz_payment_plan set rest_principal = 27214.24, principal_interest=2348.70, pay_principal=1,858.58, pay_interest=490.12 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 23;
+update biz_payment_plan set rest_principal = 25324.33, principal_interest=2348.70, pay_principal=1,889.91, pay_interest=458.79 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 24;
+update biz_payment_plan set rest_principal = 23402.56, principal_interest=2348.70, pay_principal=1,921.77, pay_interest=426.93 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 25;
+update biz_payment_plan set rest_principal = 21447.43, principal_interest=2348.70, pay_principal=1,953.97, pay_interest=394.53 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 26;
+update biz_payment_plan set rest_principal = 19458.53, principal_interest=2348.70, pay_principal=1,986.52, pay_interest=361.58 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 27;
+update biz_payment_plan set rest_principal = 17435.47, principal_interest=2348.70, pay_principal=2,019.43, pay_interest=328.08 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 28;
+update biz_payment_plan set rest_principal = 15377.86, principal_interest=2348.70, pay_principal=2,052.70, pay_interest=294.02 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 29;
+update biz_payment_plan set rest_principal = 13285.32, principal_interest=2348.70, pay_principal=2,086.34, pay_interest=259.38 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 30;
+update biz_payment_plan set rest_principal = 11157.47, principal_interest=2348.70, pay_principal=2,120.35, pay_interest=224.16 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 31;
+update biz_payment_plan set rest_principal = 8993.94, principal_interest=2348.70, pay_principal=2,154.74, pay_interest=188.34 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 32;
+update biz_payment_plan set rest_principal = 6824.35, principal_interest=2348.70, pay_principal=2,189.51, pay_interest=151.92 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 33;
+update biz_payment_plan set rest_principal = 4638.32, principal_interest=2348.70, pay_principal=2,224.67, pay_interest=114.89 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 34;
+update biz_payment_plan set rest_principal = 2435.47, principal_interest=2348.70, pay_principal=2,260.22, pay_interest=77.23 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 35;
+update biz_payment_plan set rest_principal = 214.44, principal_interest=2348.70, pay_principal=2,296.17, pay_interest=38.94 where project_id ='f80c95de0cfc4361a0cf0cb5b6b41fd5' and contract_batch_payment_periods= 36;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
