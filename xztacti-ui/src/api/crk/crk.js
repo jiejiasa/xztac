@@ -67,3 +67,19 @@ export function goOut(data) {
   })
 }
 
+
+export function getAllInfo(id) {
+  return request({
+    url: '/inventory/getAllInfo' + '?id=' + id,
+    method: 'get',
+  })
+}
+
+
+export function updateInventory(data) {
+  return request({
+    url: '/inventory/updateInventory',
+    method: 'post',
+    data: data
+  })
+}

@@ -7,6 +7,7 @@ import com.xzt.vo.HandleAuditParam;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -75,6 +76,27 @@ public class ProcessServiceImpl implements IProcessService {
         // 3. 根据当前审核状态更新套餐信息、服务项的状态
 
         return true;
+    }
+
+    @Override
+    public List<String> getHistoryPeopleId(String id) {
+
+
+        List<String> strings = new ArrayList<>();
+
+        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(id).list();
+        if(!list.isEmpty()){
+            HistoricProcessInstance historicProcessInstance = list.get(0);
+            String id1 = historicProcessInstance.getId();
+            List<HistoricTaskInstance> list1 = historyService.createHistoricTaskInstanceQuery().processInstanceId(id1).list();
+            for (HistoricTaskInstance historicTaskInstance : list1){
+                String assignee = historicTaskInstance.getAssignee();
+                strings.add(assignee);
+            }
+        }
+
+
+        return strings;
     }
 
 

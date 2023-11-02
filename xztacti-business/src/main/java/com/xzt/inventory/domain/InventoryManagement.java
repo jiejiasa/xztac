@@ -14,14 +14,6 @@ public class InventoryManagement {
     @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
 
-    private String inventoryCode;
-
-    private String carInformation;
-
-    private Integer carNum;
-
-    private Long creatorId;
-
     private String time;
 
     private Integer delFlag;
@@ -49,6 +41,10 @@ public class InventoryManagement {
     private String parkingGarage;
 
     private String makeAndModel;
+
+    private Integer isNormal;
+
+    private Long creatorId;
 
     @TableField(exist = false)
     private Integer inDay;

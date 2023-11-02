@@ -92,7 +92,6 @@
         </template>
       </el-table-column>
 
-
       <el-table-column
         prop="nickName"
         label="入库人名称"
@@ -104,7 +103,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            v-if="scope.row.status !== 1"
+            v-if="scope.row.status !== 1 && scope.row.status !== 3"
             @click="handleUpdate(scope.row)"
           >编辑</el-button>
           <el-button
@@ -117,10 +116,18 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-edit"
+            v-if="scope.row.status === 3"
+            @click="getAllInfo(scope.row)"
+          >费用结清</el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-delete"
             v-if="scope.row.status !== 1"
             @click="handleDelete(scope.row)"
           >删除</el-button>
+
           <el-button type="primary"
                      size="small"
                      v-if="scope.row.status === 1"
@@ -223,6 +230,23 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="车钥匙是否好用:" prop="isNormal"  >
+              <template>
+                <el-select v-model="form.isNormal" filterable placeholder="请选择"
+                           style="width:80%">
+                  <el-option
+                    v-for="item in normals"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </template>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="备注:" prop="remark">
           <el-input  type="textarea" :rows="5" @input = "changeSequence" v-model="form.remark" placeholder="备注" maxlength="300" />
         </el-form-item>
@@ -274,7 +298,6 @@
                 type="date"
                 :disabled="true"
                 style="width:100%"
-
                 placeholder="选择日期"
                 :picker-options="pickerOptions">
               </el-date-picker>
@@ -358,12 +381,12 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="出库原因:" prop="outboundReason" >
-                <el-input @input = "changeSequence" v-model="auditForm.outboundReason"   placeholder="出库原因" maxlength="50"  />
+                <el-input @input = "changeSequence" v-model="auditForm.outboundReason"   placeholder="出库原因" maxlength="50" :disabled = "Allinfoedit" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="停车费用:" prop="parkingFees" >
-                <el-input  @input = "changeSequence" v-model="auditForm.parkingFees" placeholder="停车费用" maxlength="50"   />
+                <el-input  @input = "changeSequence" v-model="auditForm.parkingFees" placeholder="停车费用" maxlength="50"   :disabled = "Allinfoedit"/>
               </el-form-item>
             </el-col>
           </el-row>
@@ -386,11 +409,14 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="车辆接收人:" prop="vehicleRecipient">
-                <el-input  @input = "changeSequence" v-model="auditForm.vehicleRecipient" placeholder="车辆接收人" maxlength="50" />
+                <el-input  @input = "changeSequence" v-model="auditForm.vehicleRecipient" placeholder="车辆接收人" maxlength="50" :disabled = "Allinfoedit"/>
               </el-form-item>
             </el-col>
           </el-row>
 
+        <el-form-item label="备注:" prop="outremark">
+          <el-input  type="textarea" :rows="5" @input = "changeSequence" v-model="auditForm.outremark" placeholder="备注" maxlength="300" />
+        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -402,7 +428,7 @@
 </template>
 
 <script>
-import { getList,getInventoryInfo,save,delInventory,getGoOut,goOut} from "@/api/crk/crk";
+import { getList,getInventoryInfo,save,delInventory,getGoOut,goOut,getAllInfo,updateInventory} from "@/api/crk/crk";
 
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
@@ -421,6 +447,22 @@ export default {
           label: '已支付'
         },
       ],
+
+      normals:[
+        {
+          value: 0,
+          label: '正常'
+        }, {
+          value: 1,
+          label: '异常'
+        }, {
+          value: 2,
+          label: '未知'
+        },
+      ],
+
+
+      Allinfoedit : false,
 
       edit: false,
       // 遮罩层
@@ -453,9 +495,8 @@ export default {
         makeAndModel:[{required : true, message:"请输入品牌型号", trigger :'blur'}],
         parkingGarage:[{required : true, message:"请输入停放车库", trigger :'blur'}],
         clearanceTeam:[{required : true, message:"请输入清收团队", trigger :'blur'}],
-        // pickUpFee:[{required : true, message:"请输入清收费用", trigger :'blur',type:"float"}],
         settleStatus:[{required : true, message:"请选择是否支付",trigger :"change",type:"number"}],
-        remark:[{required : true, message:"请输入备注", trigger :'blur'}],
+        isNormal:[{required : true, message:"请选择车钥匙是否正常",trigger :"change",type:"number"}],
       },
 
       auditrules: {
@@ -471,6 +512,7 @@ export default {
         inventoryManagement:{},
         firstPeople:[],
         twoPeople:[],
+        ooutInventory :{},
         firstPeopleId:undefined,
         settleStatus:undefined,
         outboundReason:undefined,
@@ -478,6 +520,7 @@ export default {
         paid:undefined,
         vehicleRecipient:undefined,
         twoPeopleId:undefined,
+        outRemark:undefined,
       },
       auditInfo: {
         title: '发起审核',
@@ -523,6 +566,29 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+
+
+    getAllInfo(row) {
+      this.Allinfoedit = true;
+      this.auditInfo.outing = true;
+      getAllInfo(row.id).then(response => {
+        this.auditForm.inventoryManagement = response.inventoryManagement;
+        this.auditForm.firstPeople = response.firstPeople;
+        this.auditForm.twoPeople = response.twoPeople;
+        this.auditForm.firstPeopleId= response.firstPeopleId;
+        this.auditForm.twoPeopleId = response.twoPeopleId;
+        this.auditForm.outboundReason= response.outboundReason;
+        this.auditForm.outRemark=response.outRemark;
+
+        this.auditForm.parkingFees = response.parkingFees;
+        this.auditForm.paid= response.paid;
+        this.auditForm.vehicleRecipient=response.vehicleRecipient;
+
+      });
+
+
+
     },
 
 
@@ -579,12 +645,30 @@ export default {
         this.title = "修改库存信息";
       });
     },
+
+
+    /** 修改按钮操作 */
+    priceSettle(row) {
+      this.reset();
+      getAllInfo(row.id).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.edit = true;
+        this.title = "修改库存信息";
+      });
+    },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateInventory(this.form).then(response => {
+            let param  = {
+              id : this.form.id,
+              remark : this.form.remark,
+              isNormal:this.form.isNormal,
+              settleStatus:this.form.settleStatus,
+            }
+            updateInventory(param).then(response => {
               this.$modal.msgSuccess("修改库存信息成功");
               this.open = false;
               this.edit = false;
@@ -625,8 +709,6 @@ export default {
 
         }
       });
-
-
 
     },
     /** 删除按钮操作 */

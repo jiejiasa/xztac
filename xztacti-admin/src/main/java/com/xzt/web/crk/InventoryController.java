@@ -7,11 +7,13 @@ import com.xzt.inventory.domain.InInventory;
 import com.xzt.inventory.domain.InventoryManagement;
 import com.xzt.inventory.rvo.GoOutInventoryRVO;
 import com.xzt.inventory.rvo.OutInventoryRVO;
+import com.xzt.inventory.rvo.PriceAllInfoRVO;
 import com.xzt.inventory.service.InInventoryService;
 import com.xzt.inventory.service.InventoryManagementService;
 import com.xzt.inventory.service.OutInventoryService;
 import com.xzt.inventory.vo.GoOutInfo;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
+import com.xzt.inventory.vo.UpdateInventoryVO;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -100,6 +102,22 @@ public class InventoryController {
     @PostMapping("/goOut")
     public Boolean goOut (@RequestBody GoOutInfo goOutInfo){
         return inventoryManagementService.goOut(goOutInfo);
+    }
+
+
+
+
+    @PostMapping("/updateInventory")
+    public Boolean updateInventory(@RequestBody UpdateInventoryVO vo){
+        return inventoryManagementService.updateInventory(vo);
+    }
+
+
+    @GetMapping("/getAllInfo")
+    public PriceAllInfoRVO getAllInfo(@RequestParam("id") Integer id){
+
+        return inventoryManagementService.getAllInfo(id);
+
     }
 
 

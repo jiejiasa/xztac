@@ -16,8 +16,6 @@ import com.xzt.inventory.vo.InventoryManagementSelectVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,7 +24,6 @@ public class InInventoryServiceImpl extends ServiceImpl<InInventoryManagementMap
 
     @Resource
     private DeployActiviti deployActiviti;
-
 
     /**
      * 查询入库记录
@@ -47,12 +44,8 @@ public class InInventoryServiceImpl extends ServiceImpl<InInventoryManagementMap
     @Override
     public Boolean inster(InventoryManagement inventoryManagement) {
 
-
         InInventory inInventory = new InInventory();
         BeanUtils.copyProperties(inventoryManagement,inInventory);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String format = formatter.format(new Date());
-        inInventory.setTime( format);
         inInventory.setPeopleId(SecurityUtils.getUserId());
         inInventory.setInMaId(inventoryManagement.getId());
         return this.save(inInventory);

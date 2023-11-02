@@ -13,16 +13,14 @@ public class InInventory {
     @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
 
+
+    private Integer inMaId;
+
     private Long peopleId;
 
-    private String carInformation;
-
-
-    private String inventoryCode;
-    private Integer carNum;
 
     private String time;
 
 
-    private Integer inMaId;
+
 }

@@ -28,4 +28,8 @@ public interface IProcessService {
     List<String> selectAuditTodoList();
 
     Boolean handleAudit(HandleAuditParam param);
+
+
+
+    List<String> getHistoryPeopleId(String id);
 }

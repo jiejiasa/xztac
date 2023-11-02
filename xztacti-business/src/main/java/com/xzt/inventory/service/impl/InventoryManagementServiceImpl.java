@@ -1,6 +1,7 @@
 package com.xzt.inventory.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -13,10 +14,12 @@ import com.xzt.inventory.domain.InventoryManagement;
 import com.xzt.inventory.domain.OutInventory;
 import com.xzt.inventory.mapper.InventoryManagementMapper;
 import com.xzt.inventory.rvo.GoOutInventoryRVO;
+import com.xzt.inventory.rvo.PriceAllInfoRVO;
 import com.xzt.inventory.service.InventoryManagementService;
 import com.xzt.inventory.service.OutInventoryService;
 import com.xzt.inventory.vo.GoOutInfo;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
+import com.xzt.inventory.vo.UpdateInventoryVO;
 import com.xzt.service.IProcessService;
 import com.xzt.system.service.ISysUserService;
 import com.xzt.vo.HandleAuditParam;
@@ -156,6 +159,47 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
         boolean update = this.update(null, updateWrapper);
         return  AjaxResult.success(update);
 
+    }
+
+    @Override
+    public Boolean updateInventory(UpdateInventoryVO vo) {
+
+
+        UpdateWrapper<InventoryManagement> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id",vo.getId());
+
+        updateWrapper.set("remark",vo.getRemark())
+                .set("is_normal",vo.getIsNormal())
+                .set("settle_status",vo.getSettleStatus());
+
+        return this.update(updateWrapper);
+
+    }
+
+    @Override
+    public PriceAllInfoRVO getAllInfo(Integer id) {
+
+        PriceAllInfoRVO priceAllInfoRVO = new PriceAllInfoRVO();
+        InventoryManagement inventoryManagement = inventoryManagementMapper.selectById(id);
+        priceAllInfoRVO.setInventoryManagement(inventoryManagement);
+        QueryWrapper<OutInventory> outInventoryQueryWrapper = new QueryWrapper<>();
+        outInventoryQueryWrapper.eq("in_man_id",id)
+                .eq("del_flag",0);
+        OutInventory one = outInventoryService.getOne(outInventoryQueryWrapper);
+        priceAllInfoRVO.setPaid(one.getPaid());
+        priceAllInfoRVO.setOutRemark(one.getOutRemark());
+        priceAllInfoRVO.setOutboundReason(one.getOutboundReason());
+        priceAllInfoRVO.setParkingFees(one.getParkingFees());
+
+        List<SysUser> userListone = sysUserService.selectByRoleKey("first");
+        List<SysUser> userListtwo = sysUserService.selectByRoleKey("two");
+
+        priceAllInfoRVO.setFirstPeople(userListone);
+        priceAllInfoRVO.setTwoPeople(userListtwo);
+        List<String> historyPeopleId = processService.getHistoryPeopleId(id.toString());
+        priceAllInfoRVO.setFirstPeopleId(Integer.valueOf(historyPeopleId.get(0)));
+        priceAllInfoRVO.setTwoPeopleId(Integer.valueOf(historyPeopleId.get(1)));
+        return priceAllInfoRVO;
     }
 
 

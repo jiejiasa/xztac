@@ -20,6 +20,9 @@ public class OutInventory {
     private String vehicleRecipient;
 
 
+    private String outRemark;
+
+
 
     private Integer creatorId;
 
