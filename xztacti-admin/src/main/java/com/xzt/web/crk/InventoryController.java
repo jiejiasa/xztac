@@ -64,7 +64,6 @@ public class InventoryController {
      */
     @GetMapping("/getInventoryInfo")
     public AjaxResult getInventoryInfo(@RequestParam("id") Integer id){
-
         return inventoryManagementService.getInventoryInfo(id);
     }
 
@@ -84,12 +83,8 @@ public class InventoryController {
 
     @GetMapping("/getGoOut")
     public GoOutInventoryRVO getGoOut(@RequestParam("id") Integer id){
-
         GoOutInventoryRVO goOutInventoryRVO = inventoryManagementService.getGoOut(id);
-
         return goOutInventoryRVO;
-
-
     }
 
 
