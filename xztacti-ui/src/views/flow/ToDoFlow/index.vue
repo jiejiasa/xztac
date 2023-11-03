@@ -74,7 +74,8 @@
         <template slot-scope="scope">
           <span v-if="scope.row.status === 0">在库</span>
           <span v-if="scope.row.status === 1">审核中</span>
-          <span v-if="scope.row.status === 2">出库</span>
+          <span v-if="scope.row.status === 2">审核未通过</span>
+          <span v-if="scope.row.status === 3">出库</span>
         </template>
       </el-table-column>
 

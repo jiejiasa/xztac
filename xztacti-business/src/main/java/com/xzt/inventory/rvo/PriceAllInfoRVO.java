@@ -11,7 +11,10 @@ public class PriceAllInfoRVO extends GoOutInventoryRVO{
 
     private Integer parkingFees;
 
-    private String paid;
+    private Integer paid;
+
+
+    private String outDate;
 
     private String vehicleRecipient;
 

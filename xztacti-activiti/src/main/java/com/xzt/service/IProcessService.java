@@ -1,5 +1,6 @@
 package com.xzt.service;
 
+import com.xzt.rvo.AuditUserInfo;
 import com.xzt.vo.HandleAuditParam;
 
 import java.util.List;
@@ -30,6 +31,9 @@ public interface IProcessService {
     Boolean handleAudit(HandleAuditParam param);
 
 
+    Boolean overAudit(String pId);
 
     List<String> getHistoryPeopleId(String id);
+
+    List<AuditUserInfo> getHistoryInfo(Integer id);
 }

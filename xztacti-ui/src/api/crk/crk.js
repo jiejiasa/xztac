@@ -83,3 +83,22 @@ export function updateInventory(data) {
     data: data
   })
 }
+
+
+
+export function updatePriceStatus(data) {
+  return request({
+    url: '/inventory/updatePriceStatus',
+    method: 'post',
+    data: data
+  })
+}
+
+
+export function getAuditHistoryRVO(id) {
+  return request({
+    url: '/inventory/getAuditHistoryRVO' + '?id=' + id,
+    method: 'get',
+  })
+}
+

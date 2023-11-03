@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.xzt.common.core.domain.AjaxResult;
 import com.xzt.inventory.domain.InInventory;
 import com.xzt.inventory.domain.InventoryManagement;
+import com.xzt.inventory.rvo.AuditHistoryRVO;
 import com.xzt.inventory.rvo.GoOutInventoryRVO;
 import com.xzt.inventory.rvo.OutInventoryRVO;
 import com.xzt.inventory.rvo.PriceAllInfoRVO;
@@ -110,8 +111,25 @@ public class InventoryController {
 
     @GetMapping("/getAllInfo")
     public PriceAllInfoRVO getAllInfo(@RequestParam("id") Integer id){
-
         return inventoryManagementService.getAllInfo(id);
+    }
+
+
+
+    @PostMapping("/updatePriceStatus")
+    public Boolean updatePriceStatus(@RequestBody GoOutInfo goOutInfo){
+        return inventoryManagementService.updatePriceStatus(goOutInfo);
+    }
+
+
+
+
+
+    @GetMapping("/getAuditHistoryRVO")
+    public AuditHistoryRVO getAuditHistoryRVO(@RequestParam("id") Integer id){
+
+          return inventoryManagementService.getAuditHistoryRVO(id);
+
 
     }
 

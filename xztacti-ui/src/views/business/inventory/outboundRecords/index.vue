@@ -79,7 +79,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="getInfo(scope.row)"
+            @click="getAuditHistoryRVO(scope.row)"
           >查看</el-button>
         </template>
       </el-table-column>
@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { getList, getOUtList } from '@/api/crk/crk'
+import { getAuditHistoryRVO, getOUtList } from '@/api/crk/crk'
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
@@ -137,9 +137,13 @@ export default {
 
 
 
-    getInfo() {
+    getAuditHistoryRVO(row) {
 
-
+      getAuditHistoryRVO(row.id).then()(response => {
+        this.form = response.data();
+        this.open = true;
+        this.title = "出库详情";
+      })
     },
 
 

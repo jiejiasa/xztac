@@ -7,3 +7,12 @@ export function getList(data) {
     data: data
   })
 }
+
+
+export function insert(data) {
+  return request({
+    url: '/garagePrice/insert',
+    method: 'post',
+    data: data
+  })
+}

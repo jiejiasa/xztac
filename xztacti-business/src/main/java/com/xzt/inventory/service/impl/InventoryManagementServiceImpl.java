@@ -13,6 +13,7 @@ import com.xzt.common.utils.bean.BeanUtils;
 import com.xzt.inventory.domain.InventoryManagement;
 import com.xzt.inventory.domain.OutInventory;
 import com.xzt.inventory.mapper.InventoryManagementMapper;
+import com.xzt.inventory.rvo.AuditHistoryRVO;
 import com.xzt.inventory.rvo.GoOutInventoryRVO;
 import com.xzt.inventory.rvo.PriceAllInfoRVO;
 import com.xzt.inventory.service.InventoryManagementService;
@@ -20,6 +21,7 @@ import com.xzt.inventory.service.OutInventoryService;
 import com.xzt.inventory.vo.GoOutInfo;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
 import com.xzt.inventory.vo.UpdateInventoryVO;
+import com.xzt.rvo.AuditUserInfo;
 import com.xzt.service.IProcessService;
 import com.xzt.system.service.ISysUserService;
 import com.xzt.vo.HandleAuditParam;
@@ -101,6 +103,9 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
     @Override
     public Boolean goOut(GoOutInfo goOutInfo) {
 
+        UpdateWrapper<OutInventory> outupdateWrapper = new UpdateWrapper<>();
+        outupdateWrapper.eq("in_man_id",goOutInfo.getId())
+                .set("del_flag",1);
 
         OutInventory outInventory = new OutInventory();
         BeanUtils.copyProperties(goOutInfo,outInventory);
@@ -124,15 +129,13 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
         return update;
     }
 
-
-
     public Boolean auditFlow(HandleAuditParam param){
         UpdateWrapper<InventoryManagement> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("id",param.getAuditId());
 
         Boolean aBoolean = processService.handleAudit(param);
 
-        if (!param.isPassed() && aBoolean){
+        if (!param.isPassed()){
             updateWrapper.set("status",2);
             this.update(null,updateWrapper);
         }
@@ -190,6 +193,8 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
         priceAllInfoRVO.setOutRemark(one.getOutRemark());
         priceAllInfoRVO.setOutboundReason(one.getOutboundReason());
         priceAllInfoRVO.setParkingFees(one.getParkingFees());
+        priceAllInfoRVO.setVehicleRecipient(one.getVehicleRecipient());
+        priceAllInfoRVO.setOutDate(one.getOutDate());
 
         List<SysUser> userListone = sysUserService.selectByRoleKey("first");
         List<SysUser> userListtwo = sysUserService.selectByRoleKey("two");
@@ -200,6 +205,30 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
         priceAllInfoRVO.setFirstPeopleId(Integer.valueOf(historyPeopleId.get(0)));
         priceAllInfoRVO.setTwoPeopleId(Integer.valueOf(historyPeopleId.get(1)));
         return priceAllInfoRVO;
+    }
+
+
+
+
+
+
+    @Override
+    public Boolean updatePriceStatus(GoOutInfo goOutInfo){
+        return outInventoryService.updatePriceStatus(goOutInfo);
+    }
+
+    @Override
+    public AuditHistoryRVO getAuditHistoryRVO(Integer id) {
+
+
+        AuditHistoryRVO auditHistoryRVO = new AuditHistoryRVO();
+        PriceAllInfoRVO allInfo = this.getAllInfo(id);
+        auditHistoryRVO.setInventoryManagement(allInfo.getInventoryManagement());
+        BeanUtils.copyProperties(allInfo,auditHistoryRVO);
+
+        List<AuditUserInfo> historyInfo = processService.getHistoryInfo(id);
+        auditHistoryRVO.setAuditUserInfoList(historyInfo);
+        return auditHistoryRVO;
     }
 
 

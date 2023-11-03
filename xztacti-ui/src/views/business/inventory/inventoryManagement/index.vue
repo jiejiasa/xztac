@@ -354,7 +354,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="第一审核人:" prop="firstPeopleId" >
-              <el-select  v-model="auditForm.firstPeopleId" filterable placeholder="第一审核人" style="width:100%">
+              <el-select  v-model="auditForm.firstPeopleId" filterable placeholder="第一审核人" :disabled = "Allinfoedit" style="width:100%">
                 <el-option
                   v-for="item in auditForm.firstPeople"
                   :key="item.userId"
@@ -366,7 +366,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="第二审核人:" prop="twoPeopleId" >
-              <el-select  v-model="auditForm.twoPeopleId" filterable placeholder="第二审核人" style="width:100%">
+              <el-select  v-model="auditForm.twoPeopleId" filterable placeholder="第二审核人"   :disabled = "Allinfoedit" style="width:100%">
                 <el-option
                   v-for="item in auditForm.twoPeople"
                   :key="item.userId"
@@ -390,6 +390,24 @@
               </el-form-item>
             </el-col>
           </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="出库日期:" prop="outDate">
+              <el-date-picker
+                value-format="yyyy-MM-dd"
+                @input = "changeSequence"
+                v-model="auditForm.outDate"
+                align="right"
+                type="date"
+                :disabled="Allinfoedit"
+                style="width:100%"
+                placeholder="选择日期"
+                :picker-options="pickerOptions">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
 
           <el-row>
             <el-col :span="12">
@@ -413,10 +431,12 @@
               </el-form-item>
             </el-col>
           </el-row>
+        <el-row>
+          <el-form-item label="备注:" prop="outRemark">
+            <el-input  type="textarea" :rows="5" @input = "changeSequence" v-model="auditForm.outRemark" placeholder="备注" maxlength="300" />
+          </el-form-item>
+        </el-row>
 
-        <el-form-item label="备注:" prop="outremark">
-          <el-input  type="textarea" :rows="5" @input = "changeSequence" v-model="auditForm.outremark" placeholder="备注" maxlength="300" />
-        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -428,7 +448,7 @@
 </template>
 
 <script>
-import { getList,getInventoryInfo,save,delInventory,getGoOut,goOut,getAllInfo,updateInventory} from "@/api/crk/crk";
+import { getList,getInventoryInfo,save,delInventory,getGoOut,goOut,getAllInfo,updateInventory,updatePriceStatus} from "@/api/crk/crk";
 
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
@@ -505,6 +525,7 @@ export default {
         outboundReason:[{required : true, message:"请输入出库原因", trigger :'blur'}],
         parkingFees:[{required : true, message:"请输入停车费用", trigger :'blur'}],
         paid:[{required : true, message:"请选择是否已付", trigger :'blur'}],
+        outDate:[{required : true, message:"请选择出库日期", trigger :'blur'}],
         vehicleRecipient:[{required : true, message:"请输入车辆接收人", trigger :'blur'}],
       },
 
@@ -521,11 +542,11 @@ export default {
         vehicleRecipient:undefined,
         twoPeopleId:undefined,
         outRemark:undefined,
+        outDate:new Date(),
       },
       auditInfo: {
         title: '发起审核',
         outing:false,
-
       },
       pickerOptions: {
         disabledDate(time) {
@@ -580,10 +601,10 @@ export default {
         this.auditForm.twoPeopleId = response.twoPeopleId;
         this.auditForm.outboundReason= response.outboundReason;
         this.auditForm.outRemark=response.outRemark;
-
         this.auditForm.parkingFees = response.parkingFees;
         this.auditForm.paid= response.paid;
         this.auditForm.vehicleRecipient=response.vehicleRecipient;
+        this.auditForm.outDate=response.outDate;
 
       });
 
@@ -599,6 +620,8 @@ export default {
         this.auditForm.inventoryManagement = response.inventoryManagement;
         this.auditForm.firstPeople = response.firstPeople;
         this.auditForm.twoPeople = response.twoPeople;
+
+
       });
     },
 
@@ -612,6 +635,7 @@ export default {
     // 取消按钮
     cancelout() {
       this.auditInfo.outing = false;
+      this.Allinfoedit = false;
       this.reset();
     },
     // 表单重置
@@ -688,16 +712,18 @@ export default {
 
     submitOut :function() {
       this.$refs["auditForm"].validate(valid => {
-        if (valid) {
+        if (this.Allinfoedit === false) {
           let param  = {
             id : this.auditForm.inventoryManagement.id,
             settleStatus:this.auditForm.settleStatus,
             outboundReason:this.auditForm.outboundReason,
             parkingFees:this.auditForm.parkingFees,
             paid:this.auditForm.paid,
+            outRemark:this.auditForm.outRemark,
             vehicleRecipient:this.auditForm.vehicleRecipient,
             firstPeopleId: this.auditForm.firstPeopleId,
             twoPeopleId:this.auditForm.twoPeopleId,
+            outDate:this.auditForm.outDate,
           }
           goOut(param).then(response => {
             this.edit = false;
@@ -707,7 +733,22 @@ export default {
 
           )
 
+        }else{
+          let param = {
+            id : this.auditForm.inventoryManagement.id,
+            paid:this.auditForm.paid,
+            outRemark:this.auditForm.outRemark,
+          }
+          updatePriceStatus(param).then(response =>{
+            this.edit = false;
+            this.getList();
+            this.auditInfo.outing = false;
+            this.Allinfoedit =false;
+          })
+
         }
+
+        this.reset();
       });
 
     },

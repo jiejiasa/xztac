@@ -1,7 +1,10 @@
 package com.xzt.service.impl;
 
+import com.xzt.common.DateUtils;
 import com.xzt.common.utils.PageUtils;
 import com.xzt.common.utils.SecurityUtils;
+import com.xzt.common.utils.StringUtils;
+import com.xzt.rvo.AuditUserInfo;
 import com.xzt.service.IProcessService;
 import com.xzt.vo.HandleAuditParam;
 import org.activiti.engine.HistoryService;
@@ -11,8 +14,10 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -21,6 +26,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class ProcessServiceImpl implements IProcessService {
 
 
@@ -33,6 +39,8 @@ public class ProcessServiceImpl implements IProcessService {
 
     @Resource
     private HistoryService historyService;
+
+
 
 
 
@@ -79,6 +87,18 @@ public class ProcessServiceImpl implements IProcessService {
     }
 
     @Override
+    public Boolean overAudit(String pId) {
+
+
+
+
+
+
+
+        return null;
+    }
+
+    @Override
     public List<String> getHistoryPeopleId(String id) {
 
 
@@ -97,6 +117,47 @@ public class ProcessServiceImpl implements IProcessService {
 
 
         return strings;
+    }
+
+    @Override
+    public List<AuditUserInfo> getHistoryInfo(Integer id) {
+
+
+        HistoricTaskInstanceQuery desc = historyService.createHistoricTaskInstanceQuery().processInstanceBusinessKey(id.toString()).orderByTaskCreateTime().desc();
+        List<HistoricTaskInstance> list = desc.list();
+
+
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        List<AuditUserInfo> tasks = new ArrayList<>();
+        for (HistoricTaskInstance t : list) {
+            AuditUserInfo task = new AuditUserInfo();
+            // 设置耗时
+            if (t.getDurationInMillis() != null) {
+                task.setDuration(DateUtils.getDatePoor(t.getDurationInMillis()));
+            }
+
+            task.setEndTime(t.getEndTime());
+            task.setStartTime(t.getStartTime());
+            task.setName(t.getName());
+
+            // 如果有删除理由，说明该任务是被用户删除的，肯定就没有任务批注
+            String reason = t.getDeleteReason();
+            if (StringUtils.isNotEmpty(reason)) {
+                continue;
+            } else {
+                // 查询批注：任务服务进行查询
+                List<Comment> comments = taskService.getTaskComments(t.getId());
+                if (!CollectionUtils.isEmpty(comments)) {
+                    task.setComment(comments.get(0).getFullMessage());
+                }
+            }
+            // 将创建的任务添加到需要返回的集合中
+            tasks.add(task);
+        }
+        return tasks;
+
     }
 
 

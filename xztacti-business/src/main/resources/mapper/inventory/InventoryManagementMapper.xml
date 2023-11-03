@@ -20,9 +20,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                im.pick_up_fee,
                im.settle_status,
                im.remark,
-              su.nick_name
+               oi.out_date,
+               su.nick_name,
+               CASE WHEN oi.out_date IS NOT NULL THEN DATEDIFF( oi.out_date, im.inbound_date) + 1
+                    ELSE DATEDIFF(CURRENT_DATE, im.inbound_date) + 1
+                   END AS in_day
         FROM inventory_management as im
-            left join sys_user as su on im.creator_id = su.user_id
+                 left join sys_user as su on im.creator_id = su.user_id
+                 left join out_inventory oi on im.id = oi.in_man_id and oi.del_flag = 0
         WHERE im.del_flag = 0
     </select>
 </mapper>

@@ -11,7 +11,6 @@
       :data="garageList"
       style="width: 100%"
       row-key="id" :tree-props="{children: 'chileds', hasChildren: 'hasChildren'}"
-
     >
 
 
@@ -31,8 +30,8 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="getInfo(scope.row)"
-          >查看</el-button>
+            @click="handleAdd"
+          >新增</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -44,11 +43,65 @@
       @pagination="getList"
     />
 
+
+    <el-dialog :title="title" :visible.sync="open" width="1200px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules"  label-width="auto">
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="请选择车库费用计算类型:" prop="isNormal"  >
+              <template>
+                <el-select v-model="form.isNormal" filterable placeholder="请选择"
+                           style="width:80%">
+                  <el-option
+                    v-for="item in normals"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </template>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="客户名称:" prop="customerName"  >
+              <el-input @input = "changeSequence"  v-model="form.customerName" placeholder="客户名称" maxlength="50" :disabled="edit" style="width :80%"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="地区:" prop="region" >
+              <el-input  @input = "changeSequence" v-model="form.region" placeholder="地区" value="ajkdsfhk" maxlength="50" :disabled="edit" style="width :80%"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="价格:" prop="pickUpFee"  >
+              <el-input @input = "changeSequence" v-model="form.pickUpFee" oninput ="value=value.replace(/[^0-9.]/g,'')"   placeholder="清收费用" maxlength="50" :disabled="edit" style="width :80%"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="7天内固定价格:" prop="pickUpFee"  >
+              <el-input @input = "changeSequence" v-model="form.pickUpFee" oninput ="value=value.replace(/[^0-9.]/g,'')"   placeholder="清收费用" maxlength="50" :disabled="edit" style="width :80%"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-import {  getList } from '@/api/crk/garage'
+import {  getList, insert } from '@/api/crk/garage'
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
@@ -87,6 +140,16 @@ export default {
 
     },
 
+    insert() {
+
+    },
+
+
+    handleAdd(){
+      this.reset();
+      this.open = true;
+      this.title = '新增车库';
+    },
 
 
     /** 查询出庫列表 */
@@ -128,6 +191,10 @@ export default {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
+    },
+
+    changeSequence(){
+      this.$forceUpdate();
     }
   }
 };

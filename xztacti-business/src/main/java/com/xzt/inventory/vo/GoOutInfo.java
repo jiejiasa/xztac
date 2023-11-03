@@ -25,4 +25,10 @@ public class GoOutInfo {
     private String vehicleRecipient;
 
 
+    private String outRemark;
+
+
+    private String outDate;
+
+
 }

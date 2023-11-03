@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.xzt.inventory.mapper.OutInventoryMapper">
 
     <select id="selectByParam" resultType="com.xzt.inventory.rvo.OutInventoryRVO">
-        select o.id,
+        select im.id,
                 o.in_man_id,
             o.outbound_reason,
             su.nick_name,
