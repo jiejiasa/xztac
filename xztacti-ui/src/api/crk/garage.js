@@ -16,3 +16,19 @@ export function insert(data) {
     data: data
   })
 }
+
+export function updatePrice(data) {
+  return request({
+    url: '/garagePrice/updatePrice',
+    method: 'post',
+    data: data
+  })
+}
+
+
+export function getInfo(id) {
+  return request({
+    url: '/garagePrice/getInfo' + '?id=' + id,
+    method: 'get',
+  })
+}

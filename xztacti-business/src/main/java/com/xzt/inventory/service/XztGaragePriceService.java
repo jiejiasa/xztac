@@ -10,4 +10,9 @@ public interface XztGaragePriceService extends IService<XztGaragePrice> {
     PageInfo<GaragePiceListRVO> getList(PageUtil pageUtil);
 
     Boolean insert(XztGaragePrice xztGaragePrice);
+
+
+    XztGaragePrice getInfo(Integer id);
+
+    Boolean updatePrice(XztGaragePrice xztGaragePrice);
 }

@@ -5,15 +5,12 @@ import com.xzt.inventory.common.PageUtil;
 import com.xzt.inventory.domain.XztGaragePrice;
 import com.xzt.inventory.rvo.GaragePiceListRVO;
 import com.xzt.inventory.service.XztGaragePriceService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("garagePrice")
+@RequestMapping("/garagePrice")
 public class XztGaragePriceController {
 
 
@@ -21,15 +18,32 @@ public class XztGaragePriceController {
     private XztGaragePriceService xztGaragePriceService;
 
 
-    @PostMapping("getList")
+    @PostMapping("/getList")
     public PageInfo<GaragePiceListRVO> getList(@RequestBody PageUtil pageUtil){
         return xztGaragePriceService.getList(pageUtil);
     }
 
 
-    @PostMapping("insert")
+    @PostMapping("/insert")
     public Boolean insert(@RequestBody XztGaragePrice xztGaragePrice){
         return xztGaragePriceService.insert(xztGaragePrice);
+    }
+
+
+    @GetMapping("/getInfo")
+    public XztGaragePrice getInfo(@RequestParam Integer id){
+
+
+        return xztGaragePriceService.getInfo(id);
+
+    }
+
+    @PostMapping("/update")
+    public Boolean getInfo(@RequestBody XztGaragePrice xztGaragePrice){
+
+
+        return xztGaragePriceService.updatePrice(xztGaragePrice);
+
     }
 
 

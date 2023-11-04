@@ -53,11 +53,32 @@ public class XztGaragePriceServiceImpl extends ServiceImpl<XztGaragePriceMapper,
     }
 
 
-
     public Boolean delById(Integer id){
         UpdateWrapper<XztGaragePrice> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("id",id)
                 .set("del_flag",1);
         return this.update(null,updateWrapper);
+    }
+
+
+
+    public XztGaragePrice getInfo(Integer id){
+
+
+        return this.getById(id);
+
+    }
+
+    @Override
+    public Boolean updatePrice(XztGaragePrice xztGaragePrice) {
+
+
+        UpdateWrapper<XztGaragePrice> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id",xztGaragePrice.getId())
+                .set("del_flag",1);
+        boolean update = this.update(updateWrapper);
+        xztGaragePrice.setId(null);
+        boolean save = this.save(xztGaragePrice);
+        return true;
     }
 }

@@ -2,6 +2,7 @@ package com.xzt.web.crk;
 
 
 import com.github.pagehelper.PageInfo;
+import com.xzt.DeployActiviti;
 import com.xzt.common.core.domain.AjaxResult;
 import com.xzt.inventory.domain.InInventory;
 import com.xzt.inventory.domain.InventoryManagement;
@@ -32,6 +33,10 @@ public class InventoryController {
 
     @Resource
     private OutInventoryService outInventoryService;
+
+
+    @Resource
+    private DeployActiviti deployActiviti;
 
 
     /**

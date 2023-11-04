@@ -201,9 +201,9 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
 
         priceAllInfoRVO.setFirstPeople(userListone);
         priceAllInfoRVO.setTwoPeople(userListtwo);
-        List<String> historyPeopleId = processService.getHistoryPeopleId(id.toString());
-        priceAllInfoRVO.setFirstPeopleId(Integer.valueOf(historyPeopleId.get(0)));
-        priceAllInfoRVO.setTwoPeopleId(Integer.valueOf(historyPeopleId.get(1)));
+//        List<String> historyPeopleId = processService.getHistoryPeopleId(id.toString());
+//        priceAllInfoRVO.setFirstPeopleId(Integer.valueOf(historyPeopleId.get(0)));
+//        priceAllInfoRVO.setTwoPeopleId(Integer.valueOf(historyPeopleId.get(1)));
         return priceAllInfoRVO;
     }
 
