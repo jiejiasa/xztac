@@ -46,6 +46,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
+            v-if="scope.row.pid !== 0"
             @click="handleInfo(scope.row)"
           >查看</el-button>
 
@@ -53,6 +54,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
+            v-if="scope.row.pid !== 0"
             @click="handelUpdate(scope.row)"
           >修改</el-button>
 
@@ -72,9 +74,9 @@
       <el-form ref="form" :model="form"   label-width="auto">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="请选择车库费用计算类型:" prop="pId"  >
+            <el-form-item label="请选择车库费用计算类型:" prop="pid"  >
               <template>
-                <el-select v-model="form.pId" filterable placeholder="请选择"
+                <el-select v-model="form.pid" filterable placeholder="请选择"
                            style="width:80%">
                   <el-option
                     v-for="item in options"
@@ -97,16 +99,15 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="价格:" prop="dayOrMonthPrice"  >
-              <el-input @input = "changeSequence" v-model="form.dayOrMonthPrice" oninput ="value=value.replace(/[^0-9.]/g,'')"   placeholder="清收费用" maxlength="50"  style="width :80%"/>
+              <el-input @input = "changeSequence" v-model="form.dayOrMonthPrice" oninput ="value=value.replace(/[^0-9.]/g,'')"   placeholder="价格" maxlength="50"  style="width :80%"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="7天内固定价格:" prop="fixedPrice"  >
-              <el-input @input = "changeSequence" v-model="form.fixedPrice" oninput ="value=value.replace(/[^0-9.]/g,'')"   placeholder="清收费用" maxlength="50"  style="width :80%"/>
+              <el-input @input = "changeSequence" v-model="form.fixedPrice" oninput ="value=value.replace(/[^0-9.]/g,'')"   placeholder="7天内固定价格" maxlength="50"  style="width :80%"/>
             </el-form-item>
           </el-col>
         </el-row>
-
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -119,7 +120,7 @@
 </template>
 
 <script>
-import {  getList, insert,getInfo,updatePrice } from '@/api/crk/garage'
+import {  getListg, insert,getInfo,updatePrice } from '@/api/crk/garage'
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
@@ -156,8 +157,7 @@ export default {
         pageSize:10,
       },
       // 表单参数
-      form: {
-      },
+      form: {},
       total:0,
     };
   },
@@ -174,14 +174,8 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != undefined) {
-            let param  = {
-              id : this.form.id,
-              pId : this.form.pId,
-              isNormal:this.form.isNormal,
-              settleStatus:this.form.settleStatus,
-            }
-            updatePrice(param).then(response => {
+          if (this.form.id !== undefined) {
+            updatePrice(this.form).then(response => {
               this.$modal.msgSuccess("修改车库信息成功");
               this.open = false;
               this.getList();
@@ -194,6 +188,7 @@ export default {
             });
           }
         }
+        this.reset()
       });
     },
 
@@ -205,18 +200,27 @@ export default {
     },
 
     handleInfo(row){
-      this.open = true;
-      this.title = '查看';
+      this.reset();
       getInfo(row.id).then(response => {
-        this.form = response.data;
+        this.form.id = response.id;
+        this.form.pid = response.pid;
+        this.form.fixedPrice = response.fixedPrice;
+        this.form.garageTypeOrName = response.garageTypeOrName;
+        this.form.dayOrMonthPrice = response.dayOrMonthPrice;
+        this.open = true;
+        this.title = '查看';
       });
     },
 
     handelUpdate(row){
-      this.open = true;
-      this.title = '修改';
       getInfo(row.id).then(response => {
-        this.form = response.data;
+        this.form.id = response.id;
+        this.form.pid = response.pid;
+        this.form.fixedPrice = response.fixedPrice;
+        this.form.garageTypeOrName = response.garageTypeOrName;
+        this.form.dayOrMonthPrice = response.dayOrMonthPrice;
+        this.open = true;
+        this.title = '修改';
       });
     },
 
@@ -224,7 +228,7 @@ export default {
     /** 查询出庫列表 */
     getList() {
       this.loading = true;
-      getList(this.queryParams).then(response => {
+      getListg(this.queryParams).then(response => {
         this.garageList = response.list;
         this.total = response.total;
         this.loading = false;
@@ -237,8 +241,7 @@ export default {
     },
     // 表单重置
     reset() {
-      this.form = {
-      };
+      this.form = {};
       this.resetForm("form");
     },
     /** 搜索按钮操作 */

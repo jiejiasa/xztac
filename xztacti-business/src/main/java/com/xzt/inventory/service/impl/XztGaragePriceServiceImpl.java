@@ -81,4 +81,13 @@ public class XztGaragePriceServiceImpl extends ServiceImpl<XztGaragePriceMapper,
         boolean save = this.save(xztGaragePrice);
         return true;
     }
+
+    @Override
+    public List<XztGaragePrice> selectList() {
+        QueryWrapper<XztGaragePrice> xztGaragePriceQueryWrapper = new QueryWrapper<>();
+        xztGaragePriceQueryWrapper.ne("p_id",0)
+                .eq("del_flag",0);
+        List<XztGaragePrice> xztGaragePrices = xztGaragePriceMapper.selectList(xztGaragePriceQueryWrapper);
+        return xztGaragePrices;
+    }
 }

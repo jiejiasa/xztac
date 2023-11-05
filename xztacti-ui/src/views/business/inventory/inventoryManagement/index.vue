@@ -198,7 +198,14 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="停放车库:" prop="parkingGarage" >
-              <el-input @input = "changeSequence" v-model="form.parkingGarage"   placeholder="停放车库" maxlength="50":disabled="edit" style="width :80%"/>
+<!--              <el-input @input = "changeSequence" v-model="form.parkingGarage"   placeholder="停放车库" maxlength="50":disabled="edit" style="width :80%"/>-->
+              <el-cascader
+                v-model="form.parkingGarage"
+                :options="garageList"
+                :props="props"
+                :show-all-levels="false"
+                @change="handleChange"></el-cascader>
+
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -314,7 +321,14 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="停放车库:" prop="parkingGarage">
-              <el-input @input = "changeSequence" v-model="auditForm.inventoryManagement.parkingGarage"   placeholder="停放车库" maxlength="50":disabled="true"/>
+<!--              <el-input @input = "changeSequence" v-model="auditForm.inventoryManagement.parkingGarage"   placeholder="停放车库" maxlength="50":disabled="true"/>-->
+              <el-cascader
+                v-model="form.parkingGarage"
+                :options="garageList"
+                :props="props"
+                :show-all-levels="false"
+                :disabled="true"
+                @change="handleChange"></el-cascader>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -449,13 +463,18 @@
 
 <script>
 import { getList,getInventoryInfo,save,delInventory,getGoOut,goOut,getAllInfo,updateInventory,updatePriceStatus} from "@/api/crk/crk";
-
+import { getListg,selectList } from '@/api/crk/garage'
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "inventoryManagement",
   data() {
     return {
+
+      value :[],
+
+    props:
+      {label:'garageTypeOrName',value:'id',children:'chileds'},
 
       //是否支付
       options:[
@@ -480,6 +499,7 @@ export default {
           label: '未知'
         },
       ],
+      garageList:[],
 
 
       Allinfoedit : false,
@@ -503,7 +523,8 @@ export default {
         pageSize:10,
       },
       // 表单参数
-      form: {},
+      form: {
+      },
       total:0,
 
       rules: {
@@ -579,9 +600,26 @@ export default {
     this.getList();
   },
   methods: {
+
+    getTreeData(data) {
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].chileds.length < 1) {
+          // children若为空数组，则将children设为undefined
+          data[i].chileds = undefined;
+        } else {
+          // children若不为空数组，则继续 递归调用 本方法
+          this.getTreeData(data[i].chileds);
+        }
+      }
+      return data;
+    },
+
     /** 查询库存列表 */
     getList() {
       this.loading = true;
+      getListg(this.queryParams).then(response => {
+        this.garageList = this.getTreeData(response.list);
+      });
       getList(this.queryParams).then(response => {
         this.crkList = response.list;
         this.total = response.total;
@@ -662,8 +700,15 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      getListg({pageNum:1,pageSize:10}).then(response => {
+        this.garageList = this.getTreeData(response.list);
+      });
       getInventoryInfo(row.id).then(response => {
         this.form = response.data;
+        // debugger
+        // console.log(response.parkingGarage)
+        // this.form.parkingGarage = response.parkingGarage.split(",").map(Number)
+        this.form.parkingGarage = this.form.parkingGarage.split(",").map(Number)
         this.open = true;
         this.edit = true;
         this.title = "修改库存信息";
@@ -671,20 +716,21 @@ export default {
     },
 
 
-    /** 修改按钮操作 */
-    priceSettle(row) {
-      this.reset();
-      getAllInfo(row.id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.edit = true;
-        this.title = "修改库存信息";
-      });
-    },
+    // /** 修改按钮操作 */
+    // priceSettle(row) {
+    //   this.reset();
+    //   getAllInfo(row.id).then(response => {
+    //     this.form = response.data;
+    //     this.open = true;
+    //     this.edit = true;
+    //     this.title = "修改库存信息";
+    //   });
+    // },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.form.parkingGarage = this.form.parkingGarage.toString();
           if (this.form.id != undefined) {
             let param  = {
               id : this.form.id,
@@ -705,9 +751,11 @@ export default {
               this.getList();
             });
           }
+          this.reset();
         }
       });
     },
+
 
 
     submitOut :function() {
@@ -762,9 +810,18 @@ export default {
       }).catch(() => {});
     },
 
+
+    handleChange(value) {
+      console.log(value);
+    },
+
+
+
     changeSequence(){
       this.$forceUpdate();
     }
-  }
+  },
+
+
 };
 </script>

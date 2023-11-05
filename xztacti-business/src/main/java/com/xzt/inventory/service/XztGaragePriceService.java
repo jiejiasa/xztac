@@ -6,6 +6,8 @@ import com.xzt.inventory.common.PageUtil;
 import com.xzt.inventory.domain.XztGaragePrice;
 import com.xzt.inventory.rvo.GaragePiceListRVO;
 
+import java.util.List;
+
 public interface XztGaragePriceService extends IService<XztGaragePrice> {
     PageInfo<GaragePiceListRVO> getList(PageUtil pageUtil);
 
@@ -15,4 +17,6 @@ public interface XztGaragePriceService extends IService<XztGaragePrice> {
     XztGaragePrice getInfo(Integer id);
 
     Boolean updatePrice(XztGaragePrice xztGaragePrice);
+
+    List<XztGaragePrice> selectList();
 }

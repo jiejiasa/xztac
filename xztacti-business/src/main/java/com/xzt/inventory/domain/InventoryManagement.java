@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @TableName(value = "inventory_management")
 public class InventoryManagement {
@@ -55,5 +57,8 @@ public class InventoryManagement {
 
     @TableField(exist = false)
     private String nickName;
+
+    @TableField(exist = false)
+    private List<XztGaragePrice> garagePriceList;
 
 }

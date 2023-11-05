@@ -8,6 +8,7 @@ import com.xzt.inventory.service.XztGaragePriceService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/garagePrice")
@@ -44,6 +45,12 @@ public class XztGaragePriceController {
 
         return xztGaragePriceService.updatePrice(xztGaragePrice);
 
+    }
+
+
+    @GetMapping("/selectList")
+    public List<XztGaragePrice> selectList(){
+        return xztGaragePriceService.selectList();
     }
 
 

@@ -18,6 +18,7 @@ import com.xzt.inventory.rvo.GoOutInventoryRVO;
 import com.xzt.inventory.rvo.PriceAllInfoRVO;
 import com.xzt.inventory.service.InventoryManagementService;
 import com.xzt.inventory.service.OutInventoryService;
+import com.xzt.inventory.service.XztGaragePriceService;
 import com.xzt.inventory.vo.GoOutInfo;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
 import com.xzt.inventory.vo.UpdateInventoryVO;
@@ -50,6 +51,9 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
 
     @Resource
     private IProcessService processService;
+
+    @Resource
+    private XztGaragePriceService xztGaragePriceService;
 
     /**
      * 库存信息列表
