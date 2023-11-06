@@ -68,7 +68,7 @@
       </el-table-column>
 
       <el-table-column
-        prop="inDayMany"
+        prop="inDayMony"
         label="停车费用" width="auto">
       </el-table-column>
 
@@ -181,7 +181,7 @@
                 v-model="form.inboundDate"
                 align="right"
                 type="date"
-                style="width:80%"
+                style="width:73%"
                 :disabled="edit"
                 placeholder="选择日期"
                 :picker-options="pickerOptions">
@@ -198,11 +198,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="停放车库:" prop="parkingGarage" >
-<!--              <el-input @input = "changeSequence" v-model="form.parkingGarage"   placeholder="停放车库" maxlength="50":disabled="edit" style="width :80%"/>-->
               <el-cascader
                 v-model="form.parkingGarage"
                 :options="garageList"
                 :props="props"
+                :disabled="edit"
+                style="width :80%"
                 :show-all-levels="false"
                 @change="handleChange"></el-cascader>
 
@@ -210,7 +211,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="清收团队:" prop="clearanceTeam"  label-width="auto">
-              <el-input  @input = "changeSequence" v-model="form.clearanceTeam" placeholder="清收团队" maxlength="50" :disabled="edit" style="width :80%"/>
+              <el-input  @input = "changeSequence" v-model="form.clearanceTeam" placeholder="清收团队" maxlength="50" :disabled="edit" style="width :73%"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -218,7 +219,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="清收费用:" prop="pickUpFee"  >
-              <el-input @input = "changeSequence" v-model="form.pickUpFee" oninput ="value=value.replace(/[^0-9.]/g,'')"   placeholder="清收费用" maxlength="50" :disabled="edit" style="width :80%"/>
+              <el-input @input = "changeSequencePickNumber"v-model="form.pickUpFee"    placeholder="清收费用" maxlength="50" :disabled="edit" style="width :80%"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -300,7 +301,7 @@
               <el-date-picker
                 value-format="yyyy-MM-dd"
                 @input = "changeSequence"
-                v-model="form.inboundDate"
+                v-model="auditForm.inventoryManagement.inboundDate"
                 align="right"
                 type="date"
                 :disabled="true"
@@ -323,7 +324,7 @@
             <el-form-item label="停放车库:" prop="parkingGarage">
 <!--              <el-input @input = "changeSequence" v-model="auditForm.inventoryManagement.parkingGarage"   placeholder="停放车库" maxlength="50":disabled="true"/>-->
               <el-cascader
-                v-model="form.parkingGarage"
+                v-model="auditForm.inventoryManagement.parkingGarage"
                 :options="garageList"
                 :props="props"
                 :show-all-levels="false"
@@ -341,7 +342,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="清收费用:" prop="pickUpFee">
-              <el-input @input = "changeSequence" v-model="auditForm.inventoryManagement.pickUpFee" oninput ="value=value.replace(/[^0-9.]/g,'')"   placeholder="清收费用" maxlength="50" :disabled="true"/>
+              <el-input @input = "changeSequencePickNumber" v-model="auditForm.inventoryManagement.pickUpFee"    placeholder="清收费用" maxlength="50" :disabled="true"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -400,7 +401,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="停车费用:" prop="parkingFees" >
-                <el-input  @input = "changeSequence" v-model="auditForm.parkingFees" placeholder="停车费用" maxlength="50"   :disabled = "Allinfoedit"/>
+                <el-input  @input = "changeSequenceNumber" v-model="auditForm.parkingFees"   placeholder="停车费用" maxlength="50"   :disabled = "Allinfoedit"/>
               </el-form-item>
             </el-col>
           </el-row>
@@ -474,7 +475,7 @@ export default {
       value :[],
 
     props:
-      {label:'garageTypeOrName',value:'id',children:'chileds'},
+      {label:'garageTypeOrName',value:'id',children:'chileds',emitPath:false},
 
       //是否支付
       options:[
@@ -544,7 +545,6 @@ export default {
         firstPeopleId:[{required : true, message:"请选择第一审核人", trigger :"change",type:"number"}],
         twoPeopleId:[{required : true, message:"请选择第二审核人", trigger :"change",type:"number"}],
         outboundReason:[{required : true, message:"请输入出库原因", trigger :'blur'}],
-        parkingFees:[{required : true, message:"请输入停车费用", trigger :'blur'}],
         paid:[{required : true, message:"请选择是否已付", trigger :'blur'}],
         outDate:[{required : true, message:"请选择出库日期", trigger :'blur'}],
         vehicleRecipient:[{required : true, message:"请输入车辆接收人", trigger :'blur'}],
@@ -617,7 +617,7 @@ export default {
     /** 查询库存列表 */
     getList() {
       this.loading = true;
-      getListg(this.queryParams).then(response => {
+      getListg({pageNum:1,pageSize:10}).then(response => {
         this.garageList = this.getTreeData(response.list);
       });
       getList(this.queryParams).then(response => {
@@ -631,6 +631,10 @@ export default {
     getAllInfo(row) {
       this.Allinfoedit = true;
       this.auditInfo.outing = true;
+      this.auditInfo.title = "费用结清"
+      getListg({pageNum:1,pageSize:10}).then(response => {
+        this.garageList = this.getTreeData(response.list);
+      });
       getAllInfo(row.id).then(response => {
         this.auditForm.inventoryManagement = response.inventoryManagement;
         this.auditForm.firstPeople = response.firstPeople;
@@ -654,6 +658,10 @@ export default {
     getGoOut(row) {
 
       this.auditInfo.outing = true;
+
+      getListg({pageNum:1,pageSize:10}).then(response => {
+        this.garageList = this.getTreeData(response.list);
+      });
       getGoOut(row.id).then(response => {
         this.auditForm.inventoryManagement = response.inventoryManagement;
         this.auditForm.firstPeople = response.firstPeople;
@@ -705,10 +713,6 @@ export default {
       });
       getInventoryInfo(row.id).then(response => {
         this.form = response.data;
-        // debugger
-        // console.log(response.parkingGarage)
-        // this.form.parkingGarage = response.parkingGarage.split(",").map(Number)
-        this.form.parkingGarage = this.form.parkingGarage.split(",").map(Number)
         this.open = true;
         this.edit = true;
         this.title = "修改库存信息";
@@ -716,16 +720,6 @@ export default {
     },
 
 
-    // /** 修改按钮操作 */
-    // priceSettle(row) {
-    //   this.reset();
-    //   getAllInfo(row.id).then(response => {
-    //     this.form = response.data;
-    //     this.open = true;
-    //     this.edit = true;
-    //     this.title = "修改库存信息";
-    //   });
-    // },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {
@@ -745,6 +739,7 @@ export default {
               this.getList();
             });
           } else {
+            this.form.pickUpFee =
             save(this.form).then(response => {
               this.$modal.msgSuccess("新增库存成功");
               this.open = false;
@@ -816,6 +811,12 @@ export default {
     },
 
 
+    changeSequenceNumber(value) {
+      this.auditForm.parkingFees = value.replace(/[^0-9]/g, '');
+    },
+    changeSequencePickNumber(value) {
+      this.form.pickUpFee = value.replace(/[^0-9]/g, '');
+    },
 
     changeSequence(){
       this.$forceUpdate();

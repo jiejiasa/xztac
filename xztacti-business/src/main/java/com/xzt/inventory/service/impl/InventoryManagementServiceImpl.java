@@ -65,6 +65,17 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
         PageHelper.startPage(vo.getPageNum(),vo.getPageSize());
         List<InventoryManagement> inventoryManagementList = inventoryManagementMapper.selectByParam();
         PageInfo<InventoryManagement> inventoryManagementPageInfo = new PageInfo<>(inventoryManagementList);
+
+
+        for (InventoryManagement i: inventoryManagementList) {
+
+
+            Integer integer = selectPrice(i.getPId(), i.getInDay(), i.getDayOrMonthPrice(), i.getFixedPrice());
+
+            i.setInDayMony(integer);
+
+        }
+
         return inventoryManagementPageInfo;
     }
 
@@ -110,7 +121,7 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
         UpdateWrapper<OutInventory> outupdateWrapper = new UpdateWrapper<>();
         outupdateWrapper.eq("in_man_id",goOutInfo.getId())
                 .set("del_flag",1);
-
+        outInventoryService.update(outupdateWrapper);
         OutInventory outInventory = new OutInventory();
         BeanUtils.copyProperties(goOutInfo,outInventory);
         outInventory.setInManId(Integer.valueOf(goOutInfo.getId()));
@@ -205,9 +216,10 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
 
         priceAllInfoRVO.setFirstPeople(userListone);
         priceAllInfoRVO.setTwoPeople(userListtwo);
-//        List<String> historyPeopleId = processService.getHistoryPeopleId(id.toString());
-//        priceAllInfoRVO.setFirstPeopleId(Integer.valueOf(historyPeopleId.get(0)));
-//        priceAllInfoRVO.setTwoPeopleId(Integer.valueOf(historyPeopleId.get(1)));
+        List<String> historyPeopleId = processService.getHistoryPeopleId(id.toString());
+        if (historyPeopleId.size() == 2){
+        priceAllInfoRVO.setFirstPeopleId(Integer.valueOf(historyPeopleId.get(0)));
+        priceAllInfoRVO.setTwoPeopleId(Integer.valueOf(historyPeopleId.get(1)));}
         return priceAllInfoRVO;
     }
 
@@ -233,6 +245,35 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
         List<AuditUserInfo> historyInfo = processService.getHistoryInfo(id);
         auditHistoryRVO.setAuditUserInfoList(historyInfo);
         return auditHistoryRVO;
+    }
+
+
+
+
+    private Integer selectPrice(Integer s, Integer day,Integer money,Integer seven){
+
+
+        Integer prices = 0;
+
+        if(s == 1){
+            prices = day * money;
+
+        }
+        if (s == 2){
+            double time = day/31;
+            prices = (int)Math.ceil(time) * money;
+        }
+        if (s == 3){
+            if (day <= 7){
+                prices = seven;
+            }else {
+                double time = day/31;
+                prices = (int)Math.ceil(time) * money;
+            }
+
+        }
+        return prices;
+
     }
 
 

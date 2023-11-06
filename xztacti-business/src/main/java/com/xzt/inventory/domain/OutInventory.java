@@ -13,7 +13,7 @@ public class OutInventory {
 
     private String outboundReason;
 
-    private Integer parkingFees;
+    private String parkingFees;
 
     private Integer paid;
 

@@ -4,12 +4,8 @@ package com.xzt.web.crk;
 import com.github.pagehelper.PageInfo;
 import com.xzt.DeployActiviti;
 import com.xzt.common.core.domain.AjaxResult;
-import com.xzt.inventory.domain.InInventory;
 import com.xzt.inventory.domain.InventoryManagement;
-import com.xzt.inventory.rvo.AuditHistoryRVO;
-import com.xzt.inventory.rvo.GoOutInventoryRVO;
-import com.xzt.inventory.rvo.OutInventoryRVO;
-import com.xzt.inventory.rvo.PriceAllInfoRVO;
+import com.xzt.inventory.rvo.*;
 import com.xzt.inventory.service.InInventoryService;
 import com.xzt.inventory.service.InventoryManagementService;
 import com.xzt.inventory.service.OutInventoryService;
@@ -56,7 +52,7 @@ public class InventoryController {
      * @return
      */
     @PostMapping("/getInList")
-    public PageInfo<InInventory> getInList(@RequestBody InventoryManagementSelectVO vo){
+    public PageInfo<InInventoryRVO> getInList(@RequestBody InventoryManagementSelectVO vo){
         return inInventoryService.selectList(vo);
     }
 

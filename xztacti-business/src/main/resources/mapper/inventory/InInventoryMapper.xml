@@ -4,4 +4,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xzt.inventory.mapper.InInventoryManagementMapper">
 
+    <select id="selectByParam" resultType="com.xzt.inventory.rvo.InInventoryRVO">
+        select im.id,
+                i.time,
+                im.region,
+                im.licens_plate_number,
+                im.inbound_date,
+                su.nick_name,
+                im.inbound_date
+            from in_inventory as i
+            left join inventory_management as im on i.in_ma_id = im.id
+            left join sys_user as su on im.creator_id = su.user_id
+                ${ew.customSqlSegment}
+    </select>
 </mapper>

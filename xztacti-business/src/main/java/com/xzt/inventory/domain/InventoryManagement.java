@@ -40,7 +40,7 @@ public class InventoryManagement {
 
     private String remark;
 
-    private String parkingGarage;
+    private Integer parkingGarage;
 
     private String makeAndModel;
 
@@ -52,11 +52,21 @@ public class InventoryManagement {
     private Integer inDay;
 
     @TableField(exist = false)
-    private String inDayMony;
+    private Integer inDayMony;
 
 
     @TableField(exist = false)
     private String nickName;
+
+
+    @TableField(exist = false)
+    private Integer pId;
+
+    @TableField(exist = false)
+    private Integer dayOrMonthPrice;
+
+    @TableField(exist = false)
+    private Integer fixedPrice;
 
     @TableField(exist = false)
     private List<XztGaragePrice> garagePriceList;

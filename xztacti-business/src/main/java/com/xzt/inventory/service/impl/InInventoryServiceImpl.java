@@ -11,6 +11,7 @@ import com.xzt.common.utils.bean.BeanUtils;
 import com.xzt.inventory.domain.InInventory;
 import com.xzt.inventory.domain.InventoryManagement;
 import com.xzt.inventory.mapper.InInventoryManagementMapper;
+import com.xzt.inventory.rvo.InInventoryRVO;
 import com.xzt.inventory.service.InInventoryService;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
 import org.springframework.stereotype.Service;
@@ -31,13 +32,13 @@ public class InInventoryServiceImpl extends ServiceImpl<InInventoryManagementMap
      * @return
      */
     @Override
-    public PageInfo<InInventory> selectList(InventoryManagementSelectVO vo) {
+    public PageInfo<InInventoryRVO> selectList(InventoryManagementSelectVO vo) {
 
         QueryWrapper<InInventory> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("time");
         PageHelper.startPage(vo.getPageNum(),vo.getPageSize());
-        List<InInventory> inInventories = baseMapper.selectList(queryWrapper);
-        PageInfo<InInventory> inInventoryPageInfo = new PageInfo<>(inInventories);
+        List<InInventoryRVO> inInventories = baseMapper.selectByParam(queryWrapper);
+        PageInfo<InInventoryRVO> inInventoryPageInfo = new PageInfo<>(inInventories);
         return inInventoryPageInfo;
     }
 

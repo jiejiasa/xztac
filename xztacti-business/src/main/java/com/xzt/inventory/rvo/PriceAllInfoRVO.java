@@ -9,7 +9,7 @@ public class PriceAllInfoRVO extends GoOutInventoryRVO{
 
     private String outboundReason;
 
-    private Integer parkingFees;
+    private String parkingFees;
 
     private Integer paid;
 

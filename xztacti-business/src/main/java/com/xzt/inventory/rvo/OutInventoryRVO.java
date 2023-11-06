@@ -13,7 +13,7 @@ public class OutInventoryRVO {
 
     private Integer parkingFees;
 
-    private String paid;
+    private Integer paid;
 
     private String createTime;
 

@@ -13,22 +13,27 @@
       border
       style="width: 100%">
       <el-table-column
-        prop="inventoryCode"
-        label="仓库编号"
+        prop="nickName"
+        label="入库登记人"
         width="180">
-      </el-table-column>
-      <el-table-column
-        prop="carInformation"
-        label="车辆信息"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="carNum"
-        label="数量">
       </el-table-column>
       <el-table-column
         prop="time"
-        label="时间">
+        label="登记时间">
+      </el-table-column>
+      <el-table-column
+        prop="inboundDate"
+        label="入库时间"
+        width="180">
+      </el-table-column>
+
+      <el-table-column
+        prop="licensPlateNumber"
+        label="车牌号">
+      </el-table-column>
+      <el-table-column
+        prop="region"
+        label="地区">
       </el-table-column>
     </el-table>
     <pagination
