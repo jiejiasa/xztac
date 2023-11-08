@@ -9,6 +9,7 @@ import com.github.pagehelper.PageInfo;
 import com.xzt.common.core.domain.AjaxResult;
 import com.xzt.common.core.domain.entity.SysUser;
 import com.xzt.common.utils.SecurityUtils;
+import com.xzt.common.utils.StringUtils;
 import com.xzt.common.utils.bean.BeanUtils;
 import com.xzt.inventory.domain.InventoryManagement;
 import com.xzt.inventory.domain.OutInventory;
@@ -28,6 +29,7 @@ import com.xzt.system.service.ISysUserService;
 import com.xzt.vo.HandleAuditParam;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -62,8 +64,28 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
      */
     @Override
     public PageInfo<InventoryManagement> selectList(InventoryManagementSelectVO vo) {
+        QueryWrapper<InventoryManagementSelectVO> queryWrapper = new QueryWrapper<>();
+        if (!"null".equals(vo.getStatus()) && !ObjectUtils.isEmpty(vo.getStatus()))
+            queryWrapper.eq("im.status",vo.getStatus());
+        if (!"null".equals(vo.getSettleStatus()) && !ObjectUtils.isEmpty(vo.getSettleStatus()))
+            queryWrapper.eq("im.settle_status",vo.getSettleStatus());
+        if (!"null".equals(vo.getRegion()) && StringUtils.isNotBlank(vo.getRegion()) && !vo.getRegion().isEmpty())
+            queryWrapper.like("im.region",vo.getRegion());
+        if (!"null".equals(vo.getBusinessType()) && StringUtils.isNotBlank(vo.getBusinessType()) && !vo.getBusinessType().isEmpty())
+            queryWrapper.like("im.business_type",vo.getBusinessType());
+        if (!"null".equals(vo.getClearanceTeam()) && StringUtils.isNotBlank(vo.getClearanceTeam()) && !vo.getClearanceTeam().isEmpty())
+            queryWrapper.like("im.clearance_team",vo.getClearanceTeam());
+        if (!"null".equals(vo.getCustomerName()) && StringUtils.isNotBlank(vo.getCustomerName()) && !vo.getCustomerName().isEmpty())
+            queryWrapper.like("im.customer_name",vo.getCustomerName());
+        if (!ObjectUtils.isEmpty(vo.getInboundDates()))
+            queryWrapper.ge("im.inbound_date",vo.getInboundDates().get(0)).le("im.inbound_date",vo.getInboundDates().get(1));
+        if (!ObjectUtils.isEmpty(vo.getOutDates()))
+            queryWrapper.ge("oi.out_date",vo.getOutDates().get(0)).le("oi.out_date",vo.getOutDates().get(1));
+        queryWrapper.eq("im.del_flag",0)
+                        .orderByDesc("time");
+
         PageHelper.startPage(vo.getPageNum(),vo.getPageSize());
-        List<InventoryManagement> inventoryManagementList = inventoryManagementMapper.selectByParam();
+        List<InventoryManagement> inventoryManagementList = inventoryManagementMapper.selectByParam(queryWrapper);
         PageInfo<InventoryManagement> inventoryManagementPageInfo = new PageInfo<>(inventoryManagementList);
 
 

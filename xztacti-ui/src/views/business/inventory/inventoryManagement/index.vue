@@ -1,6 +1,63 @@
  q<template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" >
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" style="width:auto">
+      <el-form-item label="客户名称" prop="customerName">
+        <el-input @input = "changeSequence"  v-model="queryParams.customerName" placeholder="客户名称" maxlength="50"  />
+      </el-form-item>
+      <el-form-item label="地区" prop="region">
+        <el-input @input = "changeSequence"  v-model="queryParams.region" placeholder="地区" maxlength="50"  />
+      </el-form-item>
+      <el-form-item label="业务类型" prop="businessType">
+        <el-input @input = "changeSequence"  v-model="queryParams.businessType" placeholder="业务类型" maxlength="50"  />
+      </el-form-item>
+      <el-form-item label="清收团队" prop="clearanceTeam">
+        <el-input @input = "changeSequence"  v-model="queryParams.clearanceTeam" placeholder="清收团队" maxlength="50"  />
+      </el-form-item>
+      <el-form-item label="是否支付" prop="settleStatus">
+        <template>
+          <el-select v-model="queryParams.settleStatus" filterable placeholder="清收费用是否支付">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </template>
+      </el-form-item>
+      <el-form-item label="库存状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="库存状态" clearable>
+          <el-option
+            v-for="item in status"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="入库日期" prop="inboundDates">
+        <el-date-picker
+          v-model="queryParams.inboundDates"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
+        </el-date-picker>
+      </el-form-item>
+
+      <el-form-item label="出库日期" prop="outDates">
+        <el-date-picker
+          v-model="queryParams.outDates"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
+        </el-date-picker>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -52,6 +109,10 @@
       <el-table-column
         prop="inboundDate"
         label="入库日期" width="auto">
+      </el-table-column>
+      <el-table-column
+        prop="outDate"
+        label="出库日期" width="auto">
       </el-table-column>
       <el-table-column
         prop="clearanceTeam"
@@ -399,9 +460,9 @@
                 <el-input @input = "changeSequence" v-model="auditForm.outboundReason"   placeholder="出库原因" maxlength="50" :disabled = "Allinfoedit" />
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item label="停车费用:" prop="parkingFees" >
-                <el-input  @input = "changeSequenceNumber" v-model="auditForm.parkingFees"   placeholder="停车费用" maxlength="50"   :disabled = "Allinfoedit"/>
+            <el-col :span="12"  >
+              <el-form-item label="停车费用:" prop="parkingFees"  >
+                <el-input    @input = "changeSequenceNumber" v-model="auditForm.parkingFees"   placeholder="停车费用" maxlength="50"   :disabled = "true"/>
               </el-form-item>
             </el-col>
           </el-row>
@@ -477,6 +538,21 @@ export default {
     props:
       {label:'garageTypeOrName',value:'id',children:'chileds',emitPath:false},
 
+      status:[
+        {
+          value: 0,
+          label: '在库'
+        }, {
+          value: 1,
+          label: '审核中'
+        }, {
+          value: 2,
+          label: '审核未通过'
+        }, {
+          value: 3,
+          label: '出库'
+        },
+      ],
       //是否支付
       options:[
         {
@@ -520,6 +596,14 @@ export default {
       refreshTable: true,
       // 查询参数
       queryParams: {
+        businessType: undefined,
+        clearanceTeam: undefined,
+        customerName: undefined,
+        region: undefined,
+        settleStatus:undefined,
+        status:undefined,
+        inboundDates:[],
+        outDates:[],
         pageNum:1,
         pageSize:10,
       },
@@ -542,7 +626,7 @@ export default {
       },
 
       auditrules: {
-        firstPeopleId:[{required : true, message:"请选择第一审核人", trigger :"change",type:"number"}],
+        firstPeopleId:[{required : true, message:"请选择第一审核人", trigger :["blur",'change']}],
         twoPeopleId:[{required : true, message:"请选择第二审核人", trigger :"change",type:"number"}],
         outboundReason:[{required : true, message:"请输入出库原因", trigger :'blur'}],
         paid:[{required : true, message:"请选择是否已付", trigger :'blur'}],
@@ -563,7 +647,7 @@ export default {
         vehicleRecipient:undefined,
         twoPeopleId:undefined,
         outRemark:undefined,
-        outDate:new Date(),
+        outDate:this.formatDate(new Date()),
       },
       auditInfo: {
         title: '发起审核',
@@ -571,7 +655,7 @@ export default {
       },
       pickerOptions: {
         disabledDate(time) {
-          return time.getTime() > Date.now();
+          return false;
         },
         shortcuts: [{
           text: '今天',
@@ -631,7 +715,7 @@ export default {
     getAllInfo(row) {
       this.Allinfoedit = true;
       this.auditInfo.outing = true;
-      this.auditInfo.title = "费用结清"
+      this.auditInfo.title = "费用结清";
       getListg({pageNum:1,pageSize:10}).then(response => {
         this.garageList = this.getTreeData(response.list);
       });
@@ -662,12 +746,11 @@ export default {
       getListg({pageNum:1,pageSize:10}).then(response => {
         this.garageList = this.getTreeData(response.list);
       });
+      this.auditForm.parkingFees = row.inDayMony;
       getGoOut(row.id).then(response => {
         this.auditForm.inventoryManagement = response.inventoryManagement;
         this.auditForm.firstPeople = response.firstPeople;
         this.auditForm.twoPeople = response.twoPeople;
-
-
       });
     },
 
@@ -755,43 +838,44 @@ export default {
 
     submitOut :function() {
       this.$refs["auditForm"].validate(valid => {
-        if (this.Allinfoedit === false) {
-          let param  = {
-            id : this.auditForm.inventoryManagement.id,
-            settleStatus:this.auditForm.settleStatus,
-            outboundReason:this.auditForm.outboundReason,
-            parkingFees:this.auditForm.parkingFees,
-            paid:this.auditForm.paid,
-            outRemark:this.auditForm.outRemark,
-            vehicleRecipient:this.auditForm.vehicleRecipient,
-            firstPeopleId: this.auditForm.firstPeopleId,
-            twoPeopleId:this.auditForm.twoPeopleId,
-            outDate:this.auditForm.outDate,
-          }
-          goOut(param).then(response => {
-            this.edit = false;
-            this.getList();
-            this.auditInfo.outing = false;
+        if(valid) {
+          if (this.Allinfoedit === false) {
+            let param = {
+              id: this.auditForm.inventoryManagement.id,
+              settleStatus: this.auditForm.settleStatus,
+              outboundReason: this.auditForm.outboundReason,
+              parkingFees: this.auditForm.parkingFees,
+              paid: this.auditForm.paid,
+              outRemark: this.auditForm.outRemark,
+              vehicleRecipient: this.auditForm.vehicleRecipient,
+              firstPeopleId: this.auditForm.firstPeopleId,
+              twoPeopleId: this.auditForm.twoPeopleId,
+              outDate: this.auditForm.outDate,
             }
+            goOut(param).then(response => {
+                this.edit = false;
+                this.getList();
+                this.auditInfo.outing = false;
+              }
+            )
 
-          )
+          } else {
+            let param = {
+              id: this.auditForm.inventoryManagement.id,
+              paid: this.auditForm.paid,
+              outRemark: this.auditForm.outRemark,
+            }
+            updatePriceStatus(param).then(response => {
+              this.edit = false;
+              this.getList();
+              this.auditInfo.outing = false;
+              this.Allinfoedit = false;
+            })
 
-        }else{
-          let param = {
-            id : this.auditForm.inventoryManagement.id,
-            paid:this.auditForm.paid,
-            outRemark:this.auditForm.outRemark,
           }
-          updatePriceStatus(param).then(response =>{
-            this.edit = false;
-            this.getList();
-            this.auditInfo.outing = false;
-            this.Allinfoedit =false;
-          })
-
+          this.reset();
         }
 
-        this.reset();
       });
 
     },
@@ -808,6 +892,13 @@ export default {
 
     handleChange(value) {
       console.log(value);
+    },
+
+    formatDate(date) {
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
     },
 
 

@@ -17,6 +17,6 @@ public class XztActiApplication
     public static void main(String[] args)
     {
         SpringApplication.run(XztActiApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  苏州行者通车辆库存系统启动成功   ლ(´ڡ`ლ)大大");
+        System.out.println(" 苏州行者通车辆库存系统启动成功 ");
     }
 }

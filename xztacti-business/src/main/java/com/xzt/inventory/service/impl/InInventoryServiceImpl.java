@@ -15,6 +15,7 @@ import com.xzt.inventory.rvo.InInventoryRVO;
 import com.xzt.inventory.service.InInventoryService;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -35,6 +36,8 @@ public class InInventoryServiceImpl extends ServiceImpl<InInventoryManagementMap
     public PageInfo<InInventoryRVO> selectList(InventoryManagementSelectVO vo) {
 
         QueryWrapper<InInventory> queryWrapper = new QueryWrapper<>();
+        if (!ObjectUtils.isEmpty(vo.getInboundDates()))
+            queryWrapper.ge("im.inbound_date",vo.getInboundDates().get(0)).le("im.inbound_date",vo.getInboundDates().get(1));
         queryWrapper.orderByDesc("time");
         PageHelper.startPage(vo.getPageNum(),vo.getPageSize());
         List<InInventoryRVO> inInventories = baseMapper.selectByParam(queryWrapper);

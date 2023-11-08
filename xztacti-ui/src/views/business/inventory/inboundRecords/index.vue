@@ -1,6 +1,18 @@
  q<template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" >
+
+      <el-form-item label="入库日期" prop="inboundDates">
+        <el-date-picker
+          v-model="queryParams.inboundDates"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
+        </el-date-picker>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -70,6 +82,7 @@ export default {
       refreshTable: true,
       // 查询参数
       queryParams: {
+        inboundDates:[],
         pageNum:1,
         pageSize:10,
       },

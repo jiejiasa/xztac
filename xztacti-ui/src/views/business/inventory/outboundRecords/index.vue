@@ -1,6 +1,49 @@
  q<template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true">
+
+
+      <el-form-item label="客户名称" prop="customerName">
+        <el-input @input = "changeSequence"  v-model="queryParams.customerName" placeholder="客户名称" maxlength="50"  />
+      </el-form-item>
+
+      <el-form-item label="清收费用是否支付" prop="settleStatus">
+        <template>
+          <el-select v-model="queryParams.settleStatus" filterable placeholder="清收费用是否支付">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </template>
+      </el-form-item>
+      <el-form-item label="停车费用是否支付" prop="paid">
+        <template>
+          <el-select v-model="queryParams.paid" filterable placeholder="停车费用是否支付">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </template>
+      </el-form-item>
+      <el-form-item label="出库日期" prop="outDates">
+        <el-date-picker
+          v-model="queryParams.outDates"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
+        </el-date-picker>
+      </el-form-item>
+
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -39,6 +82,11 @@
       <el-table-column
         prop="createTime"
         label="出库发起时间"  width="auto">
+      </el-table-column>
+
+      <el-table-column
+        prop="outDate"
+        label="出库日期"  width="auto">
       </el-table-column>
 
       <el-table-column
@@ -362,6 +410,10 @@ export default {
       refreshTable: true,
       // 查询参数
       queryParams: {
+        paid:undefined,
+        settleStatus:undefined,
+        customerName:undefined,
+        outDates:[],
         pageNum:1,
         pageSize:10,
       },

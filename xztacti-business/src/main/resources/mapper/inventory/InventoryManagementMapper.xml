@@ -25,6 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                gp.p_id,
                gp.day_or_month_price,
                gp.fixed_price,
+               oi.out_date,
                CASE WHEN oi.out_date IS NOT NULL THEN DATEDIFF( oi.out_date, im.inbound_date) + 1
                     ELSE DATEDIFF(CURRENT_DATE, im.inbound_date) + 1
                    END AS in_day
@@ -32,6 +33,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                  left join sys_user as su on im.creator_id = su.user_id
                  left join out_inventory oi on im.id = oi.in_man_id and oi.del_flag = 0
         left join  xzt_garage_price as gp on im.parking_garage = gp.id
-        WHERE im.del_flag = 0
+            ${ew.customSqlSegment}
     </select>
 </mapper>

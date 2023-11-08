@@ -27,4 +27,8 @@ public class OutInventoryRVO {
 
 
 
+    private String outDate;
+
+
+
 }

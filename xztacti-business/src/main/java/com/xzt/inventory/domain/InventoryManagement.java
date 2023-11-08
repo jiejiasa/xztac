@@ -71,4 +71,7 @@ public class InventoryManagement {
     @TableField(exist = false)
     private List<XztGaragePrice> garagePriceList;
 
+    @TableField(exist = false)
+    private String outDate;
+
 }

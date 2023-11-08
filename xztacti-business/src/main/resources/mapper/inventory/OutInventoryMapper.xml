@@ -14,7 +14,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             o.create_time,
             o.vehicle_recipient,
             im.customer_name,
-            im.status
+            im.status,
+            o.out_date
         from out_inventory as o
         left join inventory_management im on o.in_man_id = im.id
         left join sys_user su on o.creator_id = su.user_id
