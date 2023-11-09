@@ -74,4 +74,12 @@ public class InventoryManagement {
     @TableField(exist = false)
     private String outDate;
 
+
+    @TableField(exist = false)
+    private Integer paid;
+
+
+    @TableField(exist = false)
+    private String garageTypeOrName;
+
 }

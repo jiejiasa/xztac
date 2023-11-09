@@ -12,6 +12,10 @@ import com.xzt.inventory.vo.GoOutInfo;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
 import com.xzt.inventory.vo.UpdateInventoryVO;
 import com.xzt.vo.HandleAuditParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public interface InventoryManagementService extends IService<InventoryManagement> {
         PageInfo<InventoryManagement> selectList(InventoryManagementSelectVO vo);
@@ -40,4 +44,17 @@ public interface InventoryManagementService extends IService<InventoryManagement
      Boolean updatePriceStatus(GoOutInfo goOutInfo);
 
     AuditHistoryRVO getAuditHistoryRVO(Integer id);
+
+
+    Boolean inventoryManagementImport(MultipartFile file ) throws Exception;
+
+
+
+
+    void getTemplate(HttpServletResponse response) throws IOException;
+
+
+
+    void exportExcle(InventoryManagementSelectVO vo,HttpServletResponse response) throws Exception;
+
 }

@@ -61,6 +61,22 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="info"
+          plain
+          icon="el-icon-upload2"
+          size="mini"
+          @click="handleImport"
+        >导入</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="testexport"
+        >导出</el-button>
       </el-form-item>
     </el-form>
 
@@ -153,10 +169,23 @@
         </template>
       </el-table-column>
 
+
+
       <el-table-column
         prop="nickName"
         label="入库人名称"
         width="auto">
+      </el-table-column>
+
+      <el-table-column
+        prop="isNormal"
+        label="车钥匙是否正常" width="auto">
+        <template slot-scope="scope">
+          <span v-if="scope.row.isNormal === 0">正常</span>
+          <span v-if="scope.row.isNormal === 1">异常</span>
+          <span v-if="scope.row.isNormal === 2">未知</span>
+
+        </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="200">
         <template slot-scope="scope">
@@ -520,18 +549,61 @@
         <el-button @click="cancelout">取 消</el-button>
       </div>
     </el-dialog>
+
+
+
+
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
+      <el-upload
+        ref="upload"
+        :limit="1"
+        accept=".xlsx, .xls"
+        :headers="upload.headers"
+        :action="upload.url + '?updateSupport=' + upload.updateSupport"
+        :disabled="upload.isUploading"
+        :on-progress="handleFileUploadProgress"
+        :on-success="handleFileSuccess"
+        :auto-upload="false"
+        drag
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip text-center" slot="tip">
+          <span>仅允许导入xls、xlsx格式文件。</span>
+          <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;" @click="importTemplate">下载模板</el-link>
+        </div>
+      </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitFileForm">确 定</el-button>
+        <el-button @click="upload.open = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getList,getInventoryInfo,save,delInventory,getGoOut,goOut,getAllInfo,updateInventory,updatePriceStatus} from "@/api/crk/crk";
+import { getList,getInventoryInfo,save,delInventory,getGoOut,goOut,getAllInfo,updateInventory,updatePriceStatus,importTemplates,exports} from "@/api/crk/crk";
 import { getListg,selectList } from '@/api/crk/garage'
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import { getToken } from '@/utils/auth'
 
 export default {
   name: "inventoryManagement",
   data() {
     return {
+
+      upload: {
+        // 是否显示弹出层（用户导入）
+        open: false,
+        // 弹出层标题（用户导入）
+        title: "",
+        // 是否禁用上传
+        isUploading: false,
+        // 设置上传的请求头部
+        headers: { Authorization: "Bearer " + getToken() },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/inventory/InventoryImport"
+      },
 
       value :[],
 
@@ -577,6 +649,7 @@ export default {
         },
       ],
       garageList:[],
+
 
 
       Allinfoedit : false,
@@ -802,6 +875,27 @@ export default {
       });
     },
 
+    handleImport() {
+      this.upload.title = "库存导入";
+      this.upload.open = true;
+    },
+
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.open = false;
+      this.upload.isUploading = false;
+      this.$refs.upload.clearFiles();
+      this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true });
+      this.getList();
+    },
+    // 提交上传文件
+    submitFileForm() {
+      this.$refs.upload.submit();
+    },
+
 
     /** 提交按钮 */
     submitForm: function() {
@@ -909,10 +1003,53 @@ export default {
       this.form.pickUpFee = value.replace(/[^0-9]/g, '');
     },
 
+    importTemplate() {
+      importTemplates().then(res => {
+        console.log(res)
+        const fileName = '模板文件'
+        const url = window.URL.createObjectURL(new Blob([res]))
+        const link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', fileName + '.xls')
+        document.body.appendChild(link)
+        link.click()
+        // 下载完成移除元素
+        // document.body.removeChild(link)
+        // 释放掉blob对象
+        // window.URL.revokeObjectURL(url)
+      }).catch(err => {
+        console.log(err.response.data.message)
+      })
+
+    },
+
+
+    testexport() {
+      exports(this.queryParams).then(res => {
+        console.log(res)
+        const fileName = '库存信息导出1'
+        const url = window.URL.createObjectURL(new Blob([res]))
+        const link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', fileName + '.xls')
+        document.body.appendChild(link)
+        link.click()
+        // 下载完成移除元素
+        // document.body.removeChild(link)
+        // 释放掉blob对象
+        // window.URL.revokeObjectURL(url)
+      }).catch(err => {
+        console.log(err.response.data.message)
+      })
+    },
+
     changeSequence(){
       this.$forceUpdate();
     }
   },
+
 
 
 };

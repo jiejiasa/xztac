@@ -13,8 +13,11 @@ import com.xzt.inventory.vo.GoOutInfo;
 import com.xzt.inventory.vo.InventoryManagementSelectVO;
 import com.xzt.inventory.vo.UpdateInventoryVO;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/inventory")
@@ -134,5 +137,31 @@ public class InventoryController {
 
     }
 
+
+
+    @PostMapping("/InventoryImport")
+    public Boolean getAuditHistoryRVO(@RequestBody MultipartFile file) throws Exception {
+
+        System.out.println("takls");
+        return inventoryManagementService.inventoryManagementImport(file);
+
+
+    }
+
+
+    @GetMapping("/importTemplate")
+    public void getAuditHistoryRVO(HttpServletResponse response) throws IOException {
+
+        inventoryManagementService.getTemplate( response);
+
+    }
+
+
+    @PostMapping("/export")
+    public void export(  HttpServletResponse response,@RequestBody InventoryManagementSelectVO vo) throws Exception {
+
+        inventoryManagementService.exportExcle(vo,response);
+
+    }
 
 }

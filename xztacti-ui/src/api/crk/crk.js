@@ -102,3 +102,22 @@ export function getAuditHistoryRVO(id) {
   })
 }
 
+export function importTemplates() {
+  return request({
+    url: '/inventory/importTemplate',
+    method: 'get',
+    responseType: 'blob',
+  })
+}
+
+
+export function exports(data) {
+  return request({
+    url: '/inventory/export',
+    method: 'post',
+    data:data,
+    responseType: 'blob',
+  })
+}
+
+
