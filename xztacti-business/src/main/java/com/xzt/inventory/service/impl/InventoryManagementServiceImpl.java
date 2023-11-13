@@ -110,7 +110,8 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
         if (!ObjectUtils.isEmpty(vo.getOutDates()))
             queryWrapper.ge("oi.out_date",vo.getOutDates().get(0)).le("oi.out_date",vo.getOutDates().get(1));
         queryWrapper.eq("im.del_flag",0)
-                        .orderByDesc("time");
+                        .orderByDesc("inbound_date")
+                                .orderByDesc("time");
 
         PageHelper.startPage(vo.getPageNum(),vo.getPageSize());
         List<InventoryManagement> inventoryManagementList = inventoryManagementMapper.selectByParam(queryWrapper);
