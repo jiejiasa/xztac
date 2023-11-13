@@ -458,8 +458,8 @@
         </el-form-item>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="第一审核人:" prop="firstPeopleId" >
-              <el-select  v-model="auditForm.firstPeopleId" filterable placeholder="第一审核人" :disabled = "Allinfoedit" style="width:100%">
+            <el-form-item label="法务主管:" prop="firstPeopleId" >
+              <el-select  v-model="auditForm.firstPeopleId" filterable placeholder="法务主管" :disabled = "Allinfoedit" style="width:100%">
                 <el-option
                   v-for="item in auditForm.firstPeople"
                   :key="item.userId"
@@ -470,8 +470,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="第二审核人:" prop="twoPeopleId" >
-              <el-select  v-model="auditForm.twoPeopleId" filterable placeholder="第二审核人"   :disabled = "Allinfoedit" style="width:100%">
+            <el-form-item label="风险经理:" prop="twoPeopleId" >
+              <el-select  v-model="auditForm.twoPeopleId" filterable placeholder="风险经理"   :disabled = "Allinfoedit" style="width:100%">
                 <el-option
                   v-for="item in auditForm.twoPeople"
                   :key="item.userId"
@@ -699,8 +699,8 @@ export default {
       },
 
       auditrules: {
-        firstPeopleId:[{required : true, message:"请选择第一审核人", trigger :["blur",'change']}],
-        twoPeopleId:[{required : true, message:"请选择第二审核人", trigger :"change",type:"number"}],
+        firstPeopleId:[{required : true, message:"请选择法务主管", trigger :["blur",'change']}],
+        twoPeopleId:[{required : true, message:"请选择风险经理", trigger :"change",type:"number"}],
         outboundReason:[{required : true, message:"请输入出库原因", trigger :'blur'}],
         paid:[{required : true, message:"请选择是否已付", trigger :'blur'}],
         outDate:[{required : true, message:"请选择出库日期", trigger :'blur'}],
@@ -888,7 +888,8 @@ export default {
       this.upload.open = false;
       this.upload.isUploading = false;
       this.$refs.upload.clearFiles();
-      this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true });
+      // this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true });
+      this.$modal.msgSuccess("导入成功");
       this.getList();
     },
     // 提交上传文件
@@ -1015,9 +1016,10 @@ export default {
         document.body.appendChild(link)
         link.click()
         // 下载完成移除元素
-        // document.body.removeChild(link)
+        document.body.removeChild(link)
         // 释放掉blob对象
-        // window.URL.revokeObjectURL(url)
+        window.URL.revokeObjectURL(url)
+
       }).catch(err => {
         console.log(err.response.data.message)
       })
@@ -1037,9 +1039,10 @@ export default {
         document.body.appendChild(link)
         link.click()
         // 下载完成移除元素
-        // document.body.removeChild(link)
+        document.body.removeChild(link)
         // 释放掉blob对象
-        // window.URL.revokeObjectURL(url)
+        window.URL.revokeObjectURL(url)
+        this.$modal.msgSuccess("导出成功");
       }).catch(err => {
         console.log(err.response.data.message)
       })

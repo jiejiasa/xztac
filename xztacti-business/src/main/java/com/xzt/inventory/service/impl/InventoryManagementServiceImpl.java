@@ -385,8 +385,6 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
 
             Boolean inster = this.inster(inventoryManagement);
             Boolean inster1 = inInventoryService.inster(inventoryManagement);
-            return inster1 && inster;
-
 
         }
 
@@ -401,7 +399,7 @@ public class InventoryManagementServiceImpl extends ServiceImpl<InventoryManagem
     public void getTemplate( HttpServletResponse response) throws IOException {
 
 
-        String filePath = "C:\\Users\\19177\\Desktop\\导入模板.xls";
+        String filePath = "D:\\Users\\19177\\Desktop\\导入模板.xls";
 
         File file = FileUtil.file(filePath);
         BufferedInputStream bufferedInputStream = null;
