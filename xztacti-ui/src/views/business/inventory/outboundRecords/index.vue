@@ -296,6 +296,15 @@
             <el-input  type="textarea" :rows="5" @input = "changeSequence" v-model="auditForm.outRemark" placeholder="备注" maxlength="300" :disabled = "true"/>
           </el-form-item>
         </el-row>
+        <el-form-item label="审核历史:"></el-form-item>
+          <el-table :data="auditForm.history">
+            <el-table-column label="名称" align="center" prop="name"  width="auto" />
+            <el-table-column label="开始时间" align="center" prop="startTime" width="auto"  />
+            <el-table-column label="结束时间" align="center" prop="endTime" width="auto"  />
+            <el-table-column label="耗时" align="center" prop="duration" width="auto" />
+            <el-table-column label="批注" align="center" show-overflow-tooltip prop="comment" />
+          </el-table>
+
 
 
       </el-form>
@@ -313,7 +322,7 @@
 </template>
 
 <script>
-import { getAuditHistoryRVO, getOUtList } from '@/api/crk/crk'
+import { getAuditHistoryRVO, getOUtList, } from '@/api/crk/crk'
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import { getListg } from '@/api/crk/garage'
 
@@ -457,6 +466,7 @@ export default {
         this.auditForm.paid = response.paid;
         this.auditForm.vehicleRecipient = response.vehicleRecipient;
         this.auditForm.outDate = response.outDate;
+        this.auditForm.history = response.auditUserInfoList;
 
       });
 

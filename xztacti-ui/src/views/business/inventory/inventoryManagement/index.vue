@@ -126,6 +126,11 @@
         prop="inboundDate"
         label="入库日期" width="auto">
       </el-table-column>
+
+      <el-table-column
+        prop="garageTypeOrName"
+        label="停放车库" width="auto">
+      </el-table-column>
       <el-table-column
         prop="outDate"
         label="出库日期" width="auto">
@@ -796,8 +801,8 @@ export default {
         this.auditForm.inventoryManagement = response.inventoryManagement;
         this.auditForm.firstPeople = response.firstPeople;
         this.auditForm.twoPeople = response.twoPeople;
-        this.auditForm.firstPeopleId= response.firstPeopleId;
-        this.auditForm.twoPeopleId = response.twoPeopleId;
+        // this.auditForm.firstPeopleId= response.firstPeopleId;
+        // this.auditForm.twoPeopleId = response.twoPeopleId;
         this.auditForm.outboundReason= response.outboundReason;
         this.auditForm.outRemark=response.outRemark;
         this.auditForm.parkingFees = response.parkingFees;
@@ -946,6 +951,8 @@ export default {
               firstPeopleId: this.auditForm.firstPeopleId,
               twoPeopleId: this.auditForm.twoPeopleId,
               outDate: this.auditForm.outDate,
+              inDate: this.auditForm.inventoryManagement.inboundDate,
+              parkingGarage: this.auditForm.inventoryManagement.parkingGarage,
             }
             goOut(param).then(response => {
                 this.edit = false;

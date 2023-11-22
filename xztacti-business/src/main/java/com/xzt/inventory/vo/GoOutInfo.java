@@ -31,4 +31,10 @@ public class GoOutInfo {
     private String outDate;
 
 
+    private String inDate;
+
+
+    private Integer parkingGarage;
+
+
 }

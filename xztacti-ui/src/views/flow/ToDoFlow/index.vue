@@ -49,15 +49,6 @@
         label="清收费用" width="auto">
       </el-table-column>
 
-<!--      <el-table-column-->
-<!--        prop="inDay"-->
-<!--        label="在库天数" width="auto">-->
-<!--      </el-table-column>-->
-
-<!--      <el-table-column-->
-<!--        prop="inDayMany"-->
-<!--        label="停车费用" width="auto">-->
-<!--      </el-table-column>-->
 
 
       <el-table-column
@@ -317,6 +308,7 @@ export default {
       },
 
 
+
       props:
         {label:'garageTypeOrName',value:'id',children:'chileds',emitPath:false},
 
@@ -373,6 +365,8 @@ export default {
         }]
       },
 
+
+
       auditForm: {
         title: '发起审核',
         outing:false,
@@ -393,6 +387,9 @@ export default {
         passed:undefined,
         outDate:new Date(),
       },
+
+
+
 
 
     };
@@ -488,17 +485,20 @@ export default {
 
 
     handle : function() {
+      this.$refs["auditForm"].validate(valid => {
+        if (valid) {
+          let param  = {
+            auditId :this.auditForm.id,
+            passed: this.auditForm.passed,
+            info: this.auditForm.info,
+          }
 
-      let param  = {
-        auditId :this.auditForm.id,
-        passed: this.auditForm.passed,
-        info: this.auditForm.info,
-      }
-
-      handle(param).then(response => {
-        this.getInList();
-        this.auditForm.outing = false;
-        this.reset();
+          handle(param).then(response => {
+            this.getInList();
+            this.auditForm.outing = false;
+            this.reset();
+          });
+        }
       });
 
     }

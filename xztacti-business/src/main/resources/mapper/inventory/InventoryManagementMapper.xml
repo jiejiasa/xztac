@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                oi.paid,
                ck.garage_type_or_name,
                im.is_normal,
-               CASE WHEN oi.out_date IS NOT NULL THEN DATEDIFF( oi.out_date, im.inbound_date) + 1
+               CASE WHEN oi.out_date IS NOT NULL  and im.status = 3 THEN DATEDIFF( oi.out_date, im.inbound_date) + 1
                     ELSE DATEDIFF(CURRENT_DATE, im.inbound_date) + 1
                    END AS in_day
         FROM inventory_management as im

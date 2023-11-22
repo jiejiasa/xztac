@@ -12,6 +12,10 @@ public class InInventoryRVO {
     private String nickName;
 
 
+
+    private String customerName;
+
+
     private String time;
 
 

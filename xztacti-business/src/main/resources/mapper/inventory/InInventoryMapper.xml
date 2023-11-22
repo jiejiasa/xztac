@@ -11,7 +11,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 im.licens_plate_number,
                 im.inbound_date,
                 su.nick_name,
-                im.inbound_date
+                im.inbound_date,
+                im.customer_name
             from in_inventory as i
             left join inventory_management as im on i.in_ma_id = im.id
             left join sys_user as su on im.creator_id = su.user_id

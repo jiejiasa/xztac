@@ -25,9 +25,14 @@
       border
       style="width: 100%">
       <el-table-column
+        prop="customerName"
+        label="客户名称"
+        width="auto">
+      </el-table-column>
+      <el-table-column
         prop="nickName"
         label="入库登记人"
-        width="180">
+        width="auto">
       </el-table-column>
       <el-table-column
         prop="time"
@@ -36,16 +41,18 @@
       <el-table-column
         prop="inboundDate"
         label="入库时间"
-        width="180">
+        width="auto">
       </el-table-column>
 
       <el-table-column
         prop="licensPlateNumber"
-        label="车牌号">
+        label="车牌号"
+        width="auto">
       </el-table-column>
       <el-table-column
         prop="region"
-        label="地区">
+        label="地区"
+        width="auto">
       </el-table-column>
     </el-table>
     <pagination
